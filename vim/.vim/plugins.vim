@@ -112,8 +112,6 @@ Plug 'thanthese/Tortoise-Typing'
 if !has('nvim')
 	"Plug 'Shougo/neocomplete.vim'
 	Plug 'maralla/completor.vim' " Ugh not working for go. Disabling at startup for now and switching back to nvim
-
-	Plug 'ensime/ensime-vim'
 endif
 if has('nvim')
 	Plug 'jodosha/vim-godebug'
@@ -123,10 +121,7 @@ if has('nvim')
 
 	"gonvim
 	Plug 'equalsraf/neovim-gui-shim'
-	Plug 'dzhou121/gonvim-fuzzy' 
-
-
-	Plug 'ensime/ensime-vim', { 'do': ':UpdateRemotePlugins' }
+	Plug 'dzhou121/gonvim-fuzzy'
 endif
 
 """ snippets
