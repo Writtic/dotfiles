@@ -60,6 +60,7 @@ case "$(uname -s)" in
 esac
 
 # Filter out packages whose directory is missing or empty.
+# bash 3.2 + 'set -u': use += and guard empty-array expansion.
 FILTERED=()
 for pkg in "${PACKAGES[@]}"; do
 	if [ ! -d "$SCRIPT_DIR/$pkg" ]; then
@@ -70,8 +71,12 @@ for pkg in "${PACKAGES[@]}"; do
 		echo "skip: $pkg (empty package)" >&2
 		continue
 	fi
-	FILTERED=("${FILTERED[@]}" "$pkg")
+	FILTERED+=("$pkg")
 done
+if [ ${#FILTERED[@]} -eq 0 ]; then
+	echo "ERROR: no packages to operate on (all skipped)." >&2
+	exit 1
+fi
 PACKAGES=("${FILTERED[@]}")
 
 echo ":: target packages: ${PACKAGES[*]}"
