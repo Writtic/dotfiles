@@ -85,24 +85,26 @@ tmux_conf_24b_colour=auto
 #   - tmux_conf_theme_synchronized
 tmux_conf_theme=enabled
 
-# onedark theme (matching joshdick/onedark.vim palette)
-tmux_conf_theme_colour_1="#282c34"    # bg (Dark)
-tmux_conf_theme_colour_2="#3e4452"    # gutter / pane border
-tmux_conf_theme_colour_3="#5c6370"    # comment / inactive fg
-tmux_conf_theme_colour_4="#61afef"    # blue (active border, accent)
-tmux_conf_theme_colour_5="#e5c07b"    # yellow (message bg, mode bg)
-tmux_conf_theme_colour_6="#21252b"    # bg_d (status bg)
-tmux_conf_theme_colour_7="#abb2bf"    # fg (status fg)
-tmux_conf_theme_colour_8="#21252b"    # bg_d (window status bg)
-tmux_conf_theme_colour_9="#e5c07b"    # yellow (mode accent)
-tmux_conf_theme_colour_10="#c678dd"   # purple (synchronized accent)
-tmux_conf_theme_colour_11="#98c379"   # green (status notification)
-tmux_conf_theme_colour_12="#5c6370"   # comment (inactive window fg)
-tmux_conf_theme_colour_13="#abb2bf"   # fg (active window fg)
-tmux_conf_theme_colour_14="#282c34"   # bg (active window bg)
-tmux_conf_theme_colour_15="#282c34"   # bg
-tmux_conf_theme_colour_16="#e06c75"   # red (synchronize-panes warning)
-tmux_conf_theme_colour_17="#abb2bf"   # fg (clock)
+# pastel light-green palette (mint/sage tinted onedark base)
+# Keeps a dark backdrop but tints accents toward soft pastel green so the
+# status bar reads as "연두색 파스텔" while still contrasting iTerm2's bg.
+tmux_conf_theme_colour_1="#2a2e2a"    # bg (slightly green-tinged dark)
+tmux_conf_theme_colour_2="#4a5e4a"    # pane border (mossy green)
+tmux_conf_theme_colour_3="#7a9a7a"    # comment / inactive fg (sage)
+tmux_conf_theme_colour_4="#b5e6b5"    # pastel mint (active border, accent)
+tmux_conf_theme_colour_5="#e8d8a0"    # pastel butter (message bg)
+tmux_conf_theme_colour_6="#1f231f"    # status bg (deeper green-tinged)
+tmux_conf_theme_colour_7="#d3e8d3"    # status fg (light pastel green)
+tmux_conf_theme_colour_8="#1f231f"    # window status bg
+tmux_conf_theme_colour_9="#e8d8a0"    # pastel butter (mode accent)
+tmux_conf_theme_colour_10="#d8b8d8"   # pastel lavender (synchronized accent)
+tmux_conf_theme_colour_11="#c8e6c8"   # softer pastel green (notification)
+tmux_conf_theme_colour_12="#7a9a7a"   # sage (inactive window fg)
+tmux_conf_theme_colour_13="#e0f0e0"   # active window fg (very light pastel green)
+tmux_conf_theme_colour_14="#2a2e2a"   # active window bg
+tmux_conf_theme_colour_15="#2a2e2a"   # bg
+tmux_conf_theme_colour_16="#e8b8b8"   # pastel coral (synchronize-panes warning)
+tmux_conf_theme_colour_17="#d3e8d3"   # clock fg
 
 # default theme (ansi)
 #tmux_conf_theme_colour_1="colour0"
