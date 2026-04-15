@@ -3,6 +3,17 @@ if isdirectory('/dev/shm')
 	set directory=/dev/shm " in-memory swap files (more risky but nothing sticks around)
 endif
 
+" nvim python3 provider (deoplete et al). Convention:
+"   python3 -m venv ~/.local/share/nvim/venv
+"   ~/.local/share/nvim/venv/bin/pip install pynvim
+" Falls back silently if the venv is not provisioned on this machine.
+if has('nvim')
+	let s:nvim_py = expand('~/.local/share/nvim/venv/bin/python3')
+	if filereadable(s:nvim_py)
+		let g:python3_host_prog = s:nvim_py
+	endif
+endif
+
 filetype plugin indent on    " required
 set t_Co=256 " Ignored by nvim
 
