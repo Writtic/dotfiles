@@ -79,6 +79,14 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# Reset xterm "modifyOtherKeys" to classic mode.
+# tmux default-terminal "tmux-256color" (+ iTerm2) otherwise emits
+# Ctrl-<letter> as CSI 27;5;<code>~ which zsh does not decode by default,
+# producing garbled output like ';5;119~' after `source ~/.zshrc`.
+if [[ -t 1 ]]; then
+  printf '\e[>4;0m'
+fi
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
