@@ -3,7 +3,7 @@ if isdirectory('/dev/shm')
 	set directory=/dev/shm " in-memory swap files (more risky but nothing sticks around)
 endif
 
-" nvim python3 provider (deoplete et al). Convention:
+" nvim python3 provider (UltiSnips + helpers). Convention:
 "   python3 -m venv ~/.local/share/nvim/venv
 "   ~/.local/share/nvim/venv/bin/pip install pynvim
 " Falls back silently if the venv is not provisioned on this machine.
@@ -58,17 +58,9 @@ if !has('nvim')
 	set term=xterm-256color
 endif
 
-let g:deoplete#enable_at_startup = 1
-set completeopt+=noinsert
+" Completion: nvim-cmp handles it (see lua-lsp.vim); keep completeopt sane.
+set completeopt=menu,menuone,noselect
 autocmd CompleteDone * silent! pclose!
-inoremap <silent><CR> <C-R>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    if (pumvisible())
-        return deoplete#close_popup()
-    else
-        return "\<CR>"
-    endif
-endfunction
 
 if has('nvim')
 	autocmd BufEnter * if &buftype == "terminal" | startinsert | endif
@@ -91,18 +83,6 @@ set guifont=GoMono\ Nerd\ Font\ Book:h18
 "set completeopt-=preview
 
 
-if !has('nvim')
-	" old completion stuff
-	"let g:ycm_complete_in_strings = 1
-	"let g:ycm_allow_changing_updatetime = 1000
-	"let g:ycm_auto_trigger = 1
-	"let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
-	"let g:completor_auto_trigger = 1
-	"let g:completor_min_chars = 2	
-	inoremap _expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
-	let g:completor_auto_trigger = 0
-        let g:completor_gocode_binary = "$HOME/go/bin/gocode"
-endif
 
 set number
 set hlsearch

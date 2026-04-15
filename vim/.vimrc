@@ -13,6 +13,9 @@ if filereadable(expand("~/.vim/am/plugins.vim")) " New
   if has('nvim') && filereadable(expand("~/.vim/am/lua-setup.vim"))
     source ~/.vim/am/lua-setup.vim
   endif
+  if has('nvim') && filereadable(expand("~/.vim/am/lua-lsp.vim"))
+    source ~/.vim/am/lua-lsp.vim
+  endif
 elseif filereadable(expand("~/.vimrc.plug")) " Deprecated
   source ~/.vimrc.plug
 endif

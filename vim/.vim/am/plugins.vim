@@ -19,7 +19,21 @@ Plug 'buoto/gotests-vim'
 Plug 'FooSoft/vim-argwrap'         " Wrap a parameter list across lines
 Plug 'majutsushi/tagbar'           " 'Outline' of current file
 
-""" Other languages
+""" LSP + completion (nvim-only; stock vim has no equivalent stack)
+if has('nvim')
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'williamboman/mason.nvim', { 'do': ':MasonUpdate' }
+  Plug 'williamboman/mason-lspconfig.nvim'
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'hrsh7th/cmp-buffer'
+  Plug 'hrsh7th/cmp-path'
+  Plug 'quangnguyen30192/cmp-nvim-ultisnips'  " use existing UltiSnips as cmp source
+  Plug 'nvimtools/none-ls.nvim'               " ALE replacement (linters/formatters as LSP)
+  Plug 'nvim-lua/plenary.nvim'                " none-ls dep
+endif
+
+""" Other languages (syntax-only; diagnostics/completion come from LSP)
 Plug 'rust-lang/rust.vim'
 Plug 'gabrielelana/vim-markdown'
 Plug 'mzlogin/vim-markdown-toc'
@@ -89,6 +103,11 @@ Plug 'itchyny/calendar.vim'
 """ snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+
+" Stock-vim-only lightweight linter fallback (nvim gets none-ls via LSP)
+if !has('nvim')
+  Plug 'dense-analysis/ale'
+endif
 
 call plug#end()
 
