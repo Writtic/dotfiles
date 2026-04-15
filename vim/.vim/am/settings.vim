@@ -1,4 +1,4 @@
-set hidden " required by CtrlSpace
+set hidden " so you can switch buffers without saving
 if isdirectory('/dev/shm')
 	set directory=/dev/shm " in-memory swap files (more risky but nothing sticks around)
 endif

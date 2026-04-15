@@ -12,12 +12,16 @@ if exists('g:loaded_shortcut')
 "  Shortcut fallback to shortcut menu on partial entry noremap <silent> <LocalLeader> :Shortcuts<Return>
 endif
 
-Shortcut CtrlP nnoremap <Leader>p :CtrlP<CR>
-Shortcut CtrlPBuffer nnoremap <Leader>ob :CtrlPBuffer
-Shortcut CtrlSpace nnoremap <Leader><Space> :CtrlSpace<CR>
+" fzf.vim (replaces ctrlp / CtrlSpace)
+Shortcut Files          nnoremap <silent> <C-p> :Files<CR>
+Shortcut Files (Leader) nnoremap <silent> <Leader>p :Files<CR>
+Shortcut Buffers        nnoremap <silent> <Leader>ob :Buffers<CR>
+Shortcut History        nnoremap <silent> <Leader>oh :History<CR>
+Shortcut Ripgrep        nnoremap <silent> <Leader>e :Rg <c-r><c-w><CR>
+Shortcut Ripgrep prompt nnoremap <silent> <Leader>E :Rg<CR>
+
 Shortcut TagbarToggle nnoremap <Leader>. :TagbarToggle<CR>
 nnoremap <Leader>d "_d
-Shortcut Find in project nnoremap <Leader>e :Ag <c-r><c-w><CR>
 Shortcut NERDTreeToggle nnoremap <Leader>T :NERDTreeToggle<CR>
 Shortcut NERDTreeFind nnoremap <Leader>t :NERDTreeFind<CR>
 
