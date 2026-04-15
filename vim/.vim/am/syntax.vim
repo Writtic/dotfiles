@@ -1,10 +1,17 @@
+" True-color rendering for onedark (terminal must support it, e.g. iTerm2, kitty, alacritty).
+if (has('termguicolors'))
+  set termguicolors
+endif
 
-"colorscheme solarized
-colorscheme kalisi
+" Active theme: onedark. Alternatives remain installed; swap the line below.
+set background=dark
+try
+  colorscheme onedark
+catch /^Vim\%((\a\+)\)\=:E185/
+  " onedark not yet installed -- fall back silently.
+  colorscheme kalisi
+endtry
 let g:monochrome_italic_comments = 1
-
-"colorscheme monochrome-light
-set background=light
 
 "autocmd ColorScheme * hi Comment gui=italic cterm=italic
 "autocmd ColorScheme * hi LineNr guifg=#737373 ctermfg=249

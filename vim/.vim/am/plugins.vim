@@ -91,6 +91,7 @@ Plug 'jeetsukumaran/vim-indentwise'
 
 """ Appearance and layout
 Plug 'ap/vim-buftabline' " tabs across top
+Plug 'joshdick/onedark.vim' " theme (active)
 Plug 'freeo/vim-kalisi' " theme
 Plug 'altercation/vim-colors-solarized' " theme
 Plug 'itchyny/lightline.vim' " status across bottom
