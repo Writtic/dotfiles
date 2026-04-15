@@ -21,10 +21,16 @@ Thumbs.db
 *.swo
 *~
 
-# Local-only tooling state (not the stow package; that is claude/ / .omc is never published)
+# Local-only tooling state
 .omc/
-# Claude Code project-local state for THIS repo (distinct from the claude/ stow package)
+# Claude Code project-local state for THIS repo
 /.claude/
+
+# Third-party plugin caches dropped into stowed package dirs at runtime
+vim/.vim/autoload/
+vim/.vim/plugged/
+vim/.vim/bundle/
+tmux/.tmux/plugins/
 
 # Local overrides and secrets
 *.local
