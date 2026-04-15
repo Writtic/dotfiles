@@ -76,7 +76,10 @@ if has('nvim')
 	nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 endif
 
-set termencoding=utf-8
+" 'termencoding' was removed from nvim; keep it only for stock vim.
+if !has('nvim')
+  set termencoding=utf-8
+endif
 "set guifont=Source\ Code\ Pro\ ExtraLight:h18
 "set guifont=Ubuntu\ Mono\ derivative\ Powerline:h18
 set guifont=GoMono\ Nerd\ Font\ Book:h18
