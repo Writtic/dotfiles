@@ -89,23 +89,31 @@ tmux_conf_theme=enabled
 # All 17 slots live in the olive/sage/green family so the status bar and
 # accents never flash yellow/purple/coral against iTerm2's dark bg. Text
 # slots are muted green (NOT pure white), avoiding white-on-pastel clashes.
+# All accents are variations of the onedark green (#98c379).
+# Brightness tiers (dark -> bright):
+#   #3d5c2a  very dark green   (border, mode/message bg)
+#   #6b8055  dim green         (inactive / comment)
+#   #7ba85e  medium-dim        (synchronized accent)
+#   #7a9a52  olive             (warning — still green family, distinguishable)
+#   #98c379  onedark canonical (active border, status fg, clock)
+#   #b4d88a  brighter          (active window fg, notification pop)
 tmux_conf_theme_colour_1="#282c34"    # main bg (onedark Dark)
-tmux_conf_theme_colour_2="#3a4a35"    # pane border (dark olive)
-tmux_conf_theme_colour_3="#5a6f52"    # comment / inactive fg (muted sage)
-tmux_conf_theme_colour_4="#7fa867"    # accent green (active border, highlights)
-tmux_conf_theme_colour_5="#3a4a35"    # message bg (dark olive)
-tmux_conf_theme_colour_6="#21252b"    # status bar bg (onedark bg_d, slightly darker than main)
-tmux_conf_theme_colour_7="#8db583"    # status fg (soft green, not white)
+tmux_conf_theme_colour_2="#3d5c2a"    # pane border (very dark green)
+tmux_conf_theme_colour_3="#6b8055"    # comment / inactive fg (dim green)
+tmux_conf_theme_colour_4="#98c379"    # active border / accent (onedark green)
+tmux_conf_theme_colour_5="#3d5c2a"    # message bg (very dark green)
+tmux_conf_theme_colour_6="#21252b"    # status bar bg (onedark bg_d)
+tmux_conf_theme_colour_7="#98c379"    # status fg (onedark green)
 tmux_conf_theme_colour_8="#21252b"    # window status bg (onedark bg_d)
-tmux_conf_theme_colour_9="#3a4a35"    # mode bg (dark olive)
-tmux_conf_theme_colour_10="#5a6f52"   # synchronized accent (sage)
-tmux_conf_theme_colour_11="#7fa867"   # notification (accent green)
-tmux_conf_theme_colour_12="#5a6f52"   # inactive window fg (sage)
-tmux_conf_theme_colour_13="#a8c99b"   # active window fg (brighter green, readable)
+tmux_conf_theme_colour_9="#3d5c2a"    # mode bg (very dark green)
+tmux_conf_theme_colour_10="#7ba85e"   # synchronized accent (medium-dim green)
+tmux_conf_theme_colour_11="#b4d88a"   # notification (brighter green)
+tmux_conf_theme_colour_12="#6b8055"   # inactive window fg (dim green)
+tmux_conf_theme_colour_13="#b4d88a"   # active window fg (brighter green)
 tmux_conf_theme_colour_14="#282c34"   # active window bg (onedark Dark)
 tmux_conf_theme_colour_15="#282c34"   # bg (onedark Dark)
-tmux_conf_theme_colour_16="#9c7a3a"   # warning (muted earthy amber, stays green-adjacent)
-tmux_conf_theme_colour_17="#8db583"   # clock fg
+tmux_conf_theme_colour_16="#7a9a52"   # warning (olive — green family, distinguishable)
+tmux_conf_theme_colour_17="#98c379"   # clock fg (onedark green)
 
 # default theme (ansi)
 #tmux_conf_theme_colour_1="colour0"
