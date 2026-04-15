@@ -89,31 +89,40 @@ tmux_conf_theme=enabled
 # All 17 slots live in the olive/sage/green family so the status bar and
 # accents never flash yellow/purple/coral against iTerm2's dark bg. Text
 # slots are muted green (NOT pure white), avoiding white-on-pastel clashes.
-# All accents are variations of the onedark green (#98c379).
-# Brightness tiers (dark -> bright):
-#   #3d5c2a  very dark green   (border, mode/message bg)
-#   #6b8055  dim green         (inactive / comment)
-#   #7ba85e  medium-dim        (synchronized accent)
-#   #7a9a52  olive             (warning — still green family, distinguishable)
-#   #98c379  onedark canonical (active border, status fg, clock)
-#   #b4d88a  brighter          (active window fg, notification pop)
-tmux_conf_theme_colour_1="#282c34"    # main bg (onedark Dark)
-tmux_conf_theme_colour_2="#3d5c2a"    # pane border (very dark green)
-tmux_conf_theme_colour_3="#6b8055"    # comment / inactive fg (dim green)
-tmux_conf_theme_colour_4="#98c379"    # active border / accent (onedark green)
-tmux_conf_theme_colour_5="#3d5c2a"    # message bg (very dark green)
-tmux_conf_theme_colour_6="#21252b"    # status bar bg (onedark bg_d)
-tmux_conf_theme_colour_7="#98c379"    # status fg (onedark green)
-tmux_conf_theme_colour_8="#21252b"    # window status bg (onedark bg_d)
-tmux_conf_theme_colour_9="#3d5c2a"    # mode bg (very dark green)
-tmux_conf_theme_colour_10="#7ba85e"   # synchronized accent (medium-dim green)
-tmux_conf_theme_colour_11="#b4d88a"   # notification (brighter green)
-tmux_conf_theme_colour_12="#6b8055"   # inactive window fg (dim green)
-tmux_conf_theme_colour_13="#b4d88a"   # active window fg (brighter green)
-tmux_conf_theme_colour_14="#282c34"   # active window bg (onedark Dark)
-tmux_conf_theme_colour_15="#282c34"   # bg (onedark Dark)
-tmux_conf_theme_colour_16="#7a9a52"   # warning (olive — green family, distinguishable)
-tmux_conf_theme_colour_17="#98c379"   # clock fg (onedark green)
+# Palette adapted from Writtic/.tmux (onedark + green highlight).
+# Core onedark anchors used throughout:
+#   #282c34  bg            (pane bg, status bg, text-on-green)
+#   #abb2bf  fg            (status bar default text)
+#   #4b5263  muted gray    (inactive windows)
+#   #98c379  onedark green (primary accent, active border, current window)
+#   #d19a66  onedark orange (messages)
+#   #e5c07b  onedark yellow (mode, bell, right-side accents)
+#   #61afef  onedark blue   (status-left 3rd segment)
+tmux_conf_theme_colour_1="#282c34"    # dark base (on-green text, status_bg, window_status_bg, message_cmd_bg)
+tmux_conf_theme_colour_2="#282c34"    # pane_border (blends intentionally with bg)
+tmux_conf_theme_colour_3="#4b5263"    # window_status_fg inactive / muted gray
+tmux_conf_theme_colour_4="#98c379"    # pane_active_border, window_status_current_bg, window_status_last_fg, clock
+tmux_conf_theme_colour_5="#d19a66"    # message_bg / message_command_fg (orange)
+tmux_conf_theme_colour_6="#abb2bf"    # status_left[0] fg
+tmux_conf_theme_colour_7="#abb2bf"    # status_left[1] fg
+tmux_conf_theme_colour_8="#abb2bf"    # status_left[2] fg
+tmux_conf_theme_colour_9="#282c34"    # status_left[0] bg
+tmux_conf_theme_colour_10="#282c34"   # status_left[1] bg
+tmux_conf_theme_colour_11="#61afef"   # status_left[2] bg (session chip, onedark blue)
+tmux_conf_theme_colour_12="#abb2bf"   # status_right[0] fg
+tmux_conf_theme_colour_13="#e5c07b"   # status_right[1] fg (yellow)
+tmux_conf_theme_colour_14="#e5c07b"   # status_right[2] fg (yellow)
+tmux_conf_theme_colour_15="#282c34"   # status_right[0] bg
+tmux_conf_theme_colour_16="#282c34"   # status_right[1] bg
+tmux_conf_theme_colour_17="#282c34"   # status_right[2] bg
+
+# Granular overrides -- Writtic's config treats status_fg, mode_bg, and
+# window_status_bell_fg distinctly from the slot cascade. Reapply here
+# so the slot defaults do not flatten them.
+tmux_conf_theme_status_fg="#abb2bf"            # status bar text (default on top of #282c34)
+tmux_conf_theme_mode_bg="#e5c07b"              # copy/command mode bg (yellow, not orange)
+tmux_conf_theme_window_status_bell_fg="#e5c07b" # bell flash (yellow)
+tmux_conf_theme_window_status_last_bg="default" # leave last-window bg transparent
 
 # default theme (ansi)
 #tmux_conf_theme_colour_1="colour0"
