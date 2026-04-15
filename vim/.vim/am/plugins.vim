@@ -70,6 +70,16 @@ Plug 'ap/vim-buftabline'           " tabs across top
 Plug 'joshdick/onedark.vim'        " theme (active)
 Plug 'itchyny/vim-cursorword'      " underline word under cursor
 
+" nvim-only: Lua-based status line + git signs (replace lightline / gitgutter)
+if has('nvim')
+  Plug 'nvim-tree/nvim-web-devicons' " icons for lualine
+  Plug 'nvim-lualine/lualine.nvim'   " status line (Lua)
+  Plug 'lewis6991/gitsigns.nvim'     " git diff signs in gutter
+else
+  Plug 'itchyny/lightline.vim'       " status line fallback for stock vim
+  Plug 'airblade/vim-gitgutter'      " gutter signs fallback for stock vim
+endif
+
 " Rest console
 Plug 'diepm/vim-rest-console'
 
