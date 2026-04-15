@@ -9,4 +9,4 @@ brew install macvim --with-cscope --with-lua --HEAD --override-system-vim
 brew install neovim/neovim/neovim
 brew install wget thefuck
 
-echo ":: Now run ./setup-pt2.sh and do the manual setups from README.asciidoc"
+echo ":: Now run ./bootstrap.sh and follow README.md for manual setups."

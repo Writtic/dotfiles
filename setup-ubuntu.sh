@@ -19,8 +19,11 @@ if grep --quiet Ubuntu /etc/lsb-release; then
 	sudo update-alternatives --config vim
 	sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
 	sudo update-alternatives --config editor
+
+	# Desktop tweak tool
+	sudo apt install -y unity-tweak-tool
 fi
 
 
-echo ":: Now run ./setup-pt2.sh and do the manual setups from README.asciidoc"
+echo ":: Now run ./bootstrap.sh and follow README.md for manual setups."
 

@@ -59,9 +59,6 @@ function! s:my_cr_function()
     endif
 endfunction
 
-"" autocmd BufWritePost *.org execute '!emacs ' + expand(<afile>) + '--batch -f org-html-export-to-html -kill'
-autocmd BufWritePost *.org silent! !emacs <afile> --batch -f org-html-export-to-html -kill 2> /dev/null
-
 if has('nvim')
 	autocmd BufEnter * if &buftype == "terminal" | startinsert | endif
 	tnoremap <Esc> <C-\><C-n>

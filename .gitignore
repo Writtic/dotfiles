@@ -1,1 +1,33 @@
 Session.vim
+
+# tmux logs
+tmux-client-*.log
+tmux-server-*.log
+*.log
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+
+# Linux
+.Trash-*
+
+# Windows
+Thumbs.db
+
+# Editor cruft
+*.swp
+*.swo
+*~
+
+# Local-only tooling state (not the stow package; that is claude/ / .omc is never published)
+.omc/
+# Claude Code project-local state for THIS repo (distinct from the claude/ stow package)
+/.claude/
+
+# Local overrides and secrets
+*.local
+*.secret
+.env
+.env.*
