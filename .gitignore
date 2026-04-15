@@ -37,3 +37,6 @@ tmux/.tmux/plugins/
 *.secret
 .env
 .env.*
+
+# Negations: files we DO want tracked despite the *.local rule above
+!tmux/.tmux.conf.local
