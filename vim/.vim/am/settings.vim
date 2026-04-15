@@ -19,7 +19,7 @@ set t_Co=256 " Ignored by nvim
 
 " set list " show whitespace chars
 " set listchars is useful in combination with :set list (showing whitespace chars)
-set listchars=eol:↲,tab:»\ ,trail:~,extends:⟩,precedes:⟨,space:·
+set listchars=eol:↲,tab:»\ ,trail:~,space:·
 set showbreak=↪
 " hi NonText ctermfg=16 guifg=#4a4a59
 " hi SpecialKey ctermfg=16 guifg=#4a4a59
