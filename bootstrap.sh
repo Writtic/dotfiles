@@ -15,7 +15,7 @@
 #
 # Claude Code (claude package):
 #   - Tracks only user-authored config under claude/.claude/. Heavy runtime
-#     state (sessions/, todos/, cache/, history.jsonl, plugins/...) and the
+#     state (sessions/, todos/, cache/, history.jsonl, plugins/...) and
 #     marketplace cache are .gitignored. Settings tracked: settings.json,
 #     .mcp.json (no secrets), agents/, commands/, hooks/, skills/.
 #     Marketplaces are declared via extraKnownMarketplaces in settings.json;
@@ -23,6 +23,11 @@
 #   - On a fresh machine: after stow completes, launch `claude` and run
 #     `/plugin` to install plugins listed under `enabledPlugins` in
 #     settings.json from the known marketplaces.
+#   - Atomic-rename recovery: Claude Code rewrites some config via temp-file
+#     + atomic rename, which silently replaces our stow symlinks with real
+#     files. recover_atomic_writes() runs before each adopt/backup stow to
+#     drop identical-content live files so stow can re-link cleanly. Drifted
+#     files are left in place with a diff hint.
 #
 # Post-stow hooks (idempotent): vim-plug, tmux tpm, nvim -> vim symlinks.
 #
@@ -92,12 +97,47 @@ PACKAGES=("${FILTERED[@]}")
 
 echo ":: target packages: ${PACKAGES[*]}"
 
+# -------- atomic-write recovery (pre-stow) --------
+# Detect real-files in the home tree that replaced our stow-managed symlinks
+# (e.g. Claude Code's /plugin atomic-rename pattern) and drop them when
+# identical to the tracked copy, so stow can re-link without --adopt
+# silently moving the live file into the repo. Files that diverged are
+# left alone with a recovery hint.
+recover_atomic_writes() {
+	local pkg="$1"
+	local conflicts file live tracked
+	# stow 2.4.1 conflict line:
+	#   * cannot stow <src> over existing target <dst> since neither a link
+	#     nor a directory and --adopt not specified
+	# Extract <dst> (a path relative to $HOME).
+	conflicts=$(stow -nv --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg" 2>&1 \
+		| sed -n 's|.*existing target \([^ ]*\) since neither a link nor a directory.*|\1|p' \
+		|| true)
+	[ -z "$conflicts" ] && return 0
+	while IFS= read -r file; do
+		[ -z "$file" ] && continue
+		live="$HOME/$file"
+		tracked="$SCRIPT_DIR/$pkg/$file"
+		[ ! -f "$live" ] && continue
+		[ -L "$live" ] && continue
+		if [ -f "$tracked" ] && cmp -s "$live" "$tracked"; then
+			rm "$live"
+			echo "recover: removed redundant ~/$file (identical to tracked copy)"
+		else
+			echo "WARN: ~/$file diverged from $tracked" >&2
+			echo "      Inspect:               diff -u \"$tracked\" \"$live\"" >&2
+			echo "      Accept live drift:     cp \"$live\" \"$tracked\"" >&2
+			echo "      Discard live drift:    rm \"$live\"" >&2
+		fi
+	done <<< "$conflicts"
+}
+
 # -------- mode dispatch --------
 case "$MODE" in
 	dry-run)
 		for pkg in "${PACKAGES[@]}"; do
-			echo "--- stow -nv -t \"\$HOME\" $pkg ---"
-			stow -nv -t "$HOME" -d "$SCRIPT_DIR" "$pkg" || true
+			echo "--- stow -nv --no-folding -t \"\$HOME\" $pkg ---"
+			stow -nv --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg" || true
 		done
 		echo ":: dry-run complete (no changes made)"
 		exit 0
@@ -106,7 +146,7 @@ case "$MODE" in
 	unstow)
 		for pkg in "${PACKAGES[@]}"; do
 			echo "--- unstow $pkg ---"
-			stow -D -v -t "$HOME" -d "$SCRIPT_DIR" "$pkg" || true
+			stow -D -v --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg" || true
 		done
 		echo ":: unstow complete"
 		exit 0
@@ -116,7 +156,8 @@ case "$MODE" in
 		TS="$(date +%Y%m%d-%H%M%S)"
 		BACKUP_DIR="$HOME/.dotfiles-backup/$TS"
 		for pkg in "${PACKAGES[@]}"; do
-			CONFLICTS=$(stow -nv -t "$HOME" -d "$SCRIPT_DIR" "$pkg" 2>&1 \
+			recover_atomic_writes "$pkg"
+			CONFLICTS=$(stow -nv --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg" 2>&1 \
 				| awk '/existing target is/ {print $NF}' || true)
 			if [ -n "$CONFLICTS" ]; then
 				mkdir -p "$BACKUP_DIR"
@@ -130,7 +171,7 @@ case "$MODE" in
 				done
 			fi
 			echo "--- stow $pkg ---"
-			stow -v -t "$HOME" -d "$SCRIPT_DIR" "$pkg"
+			stow -v --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg"
 		done
 		if [ -d "$BACKUP_DIR" ]; then
 			ln -sfn "$BACKUP_DIR" "$HOME/.dotfiles-backup/latest"
@@ -140,11 +181,16 @@ case "$MODE" in
 
 	adopt)
 		# --adopt pulls existing target files INTO the package (overwriting package
-		# content with the user's live file). Review with `git diff` afterwards and
-		# `git checkout -- <file>` to discard unwanted drift.
+		# content with the user's live file). recover_atomic_writes() runs first
+		# to drop identical-content live files so --adopt doesn't no-op move them
+		# into the repo. --no-folding forces per-file symlinks so empty target
+		# dirs don't get replaced with directory symlinks (which would let runtime
+		# tools deposit files outside the repo's view). Review with `git diff`
+		# afterwards and `git checkout -- <file>` to discard unwanted drift.
 		for pkg in "${PACKAGES[@]}"; do
-			echo "--- stow --adopt $pkg ---"
-			stow --adopt -v -t "$HOME" -d "$SCRIPT_DIR" "$pkg"
+			recover_atomic_writes "$pkg"
+			echo "--- stow --adopt --no-folding $pkg ---"
+			stow --adopt -v --no-folding -t "$HOME" -d "$SCRIPT_DIR" "$pkg"
 		done
 		echo ":: adopted. Review with: (cd $SCRIPT_DIR && git status)"
 		;;

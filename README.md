@@ -144,6 +144,16 @@ cd ~/repo/dotfiles && stow -R claude
 > 만들어도 repo로 자동 흘러가지 **않으므로**, 반드시 `claude/.claude/` 쪽에
 > 먼저 작성하고 `stow -R claude`로 재동기화한다.
 
+#### Atomic-rename 복구
+
+Claude Code는 일부 설정 JSON을 **temp-file + atomic rename**으로 저장한다 (`/plugin`의 `plugins/known_marketplaces.json` 등). atomic rename은 심링크를 보존하지 않으므로, 만약 미래에 추적 파일이 atomic rename으로 실파일화되면 다음번 `./bootstrap.sh`가 자동 복구한다:
+
+- `recover_atomic_writes()`가 stow 직전에 라이브 실파일을 스캔
+- 추적 사본과 **내용이 동일**하면 라이브 사본을 삭제 → stow가 심링크 재생성
+- **drift된 경우** 경고와 함께 `diff` / `cp` / `rm` 힌트를 출력하고 사용자가 직접 결정하도록 둠
+
+> 현재 추적 파일 중 atomic-rename 패턴에 노출된 것은 없다 (`plugins/` 전체가 untrack). 위 인프라는 미래에 추적 대상이 늘어날 경우를 위한 안전장치.
+
 #### macOS ↔ Linux 이동
 
 `settings.json`, `.mcp.json`, `agents/`, `commands/`, `hooks/`, `skills/` 모두 OS 독립적이라 별도 작업 없이 그대로 stow된다. 플러그인 캐시(`~/.claude/plugins/`)는 `/plugin`이 머신에 맞게 재생성하므로 OS 이동 시 신경 쓸 필요 없음.
