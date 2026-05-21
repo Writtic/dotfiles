@@ -9,9 +9,18 @@
 #   ./bootstrap.sh --help       # show this help
 #
 # Packages:
-#   common : zsh vim tmux starship
+#   common : zsh vim tmux starship claude
 #   linux  : xinit (X11 only; auto-skipped if empty)
-#   (emacs, spacemacs, and claude are intentionally managed outside this repo)
+#   (emacs and spacemacs are intentionally managed outside this repo)
+#
+# Claude Code (claude package):
+#   - Tracks only user-authored config + plugin manifests under claude/.claude/.
+#     Heavy runtime state (sessions/, todos/, cache/, history.jsonl, ...) is
+#     .gitignored. Settings tracked: settings.json, .mcp.json (no secrets),
+#     plugins/{installed_plugins,known_marketplaces}.json.
+#   - On a fresh machine: after stow completes, launch `claude` and run
+#     `/plugin` to materialize the marketplace checkouts + plugin caches that
+#     installed_plugins.json points at.
 #
 # Post-stow hooks (idempotent): vim-plug, tmux tpm, nvim -> vim symlinks.
 #
@@ -51,7 +60,7 @@ if ! command -v stow >/dev/null 2>&1; then
 fi
 
 # -------- packages (bash 3.2: plain arrays, no assoc arrays) --------
-PACKAGES_COMMON=(zsh vim tmux starship)
+PACKAGES_COMMON=(zsh vim tmux starship claude)
 PACKAGES_LINUX=(xinit)
 
 PACKAGES=("${PACKAGES_COMMON[@]}")
@@ -161,6 +170,16 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 	mkdir -p "$HOME/.tmux/plugins"
 	git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm" || \
 		echo "WARN: tpm clone failed (offline?)" >&2
+fi
+
+# Claude Code: nudge plugin sync if manifest is stowed but cache is empty.
+# Claude Code itself owns marketplace clone + plugin download — we just remind
+# the user to trigger it once on a fresh machine.
+CLAUDE_MANIFEST="$HOME/.claude/plugins/installed_plugins.json"
+CLAUDE_CACHE="$HOME/.claude/plugins/cache"
+if [ -e "$CLAUDE_MANIFEST" ] && [ ! -d "$CLAUDE_CACHE" ]; then
+	echo ":: Claude Code: plugin manifest present but cache missing."
+	echo "   Run 'claude' and execute '/plugin' to materialize installed plugins."
 fi
 
 echo ":: bootstrap complete."
