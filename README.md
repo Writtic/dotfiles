@@ -31,7 +31,7 @@ cd ~/repo/dotfiles
 | `vim` | `~/.vimrc`, `~/.vim/` |
 | `tmux` | `~/.tmux.conf` |
 | `starship` | `~/.config/starship.toml` |
-| `claude` | `~/.claude/settings.json`, `~/.claude/.mcp.json`, `~/.claude/plugins/known_marketplaces.json`, `~/.claude/{agents,commands,hooks,skills}/` |
+| `claude` | `~/.claude/settings.json`, `~/.claude/.mcp.json`, `~/.claude/{agents,commands,hooks,skills}/` |
 | `xinit` *(Linux only)* | `~/.xinitrc`, `~/.Xmodmap` |
 
 > `emacs`, `spacemacs` 설정은 의도적으로 이 repo 밖에서 별도 관리한다.
@@ -103,12 +103,11 @@ stow -nv -t ~ newpkg   # dry-run으로 심링크 맵 확인
 
 `claude/.claude/` 하위는 **화이트리스트** 방식으로 트래킹한다. `.gitignore`에서 전체 무시 후 다음만 추적:
 
-- `settings.json` — 언어, 활성 플러그인 (`enabledPlugins`), 추가 마켓플레이스 (`extraKnownMarketplaces`), `statusLine` 등 (토큰 없음 확인 필수)
+- `settings.json` — 언어, 사고 깊이 (`effortLevel`), 활성 플러그인 (`enabledPlugins`), 추가 마켓플레이스 (`extraKnownMarketplaces`), `statusLine` 등 (토큰 없음 확인 필수)
 - `.mcp.json` — MCP 서버 정의 (**API 키/토큰이 포함되면 절대 커밋 금지**)
-- `plugins/known_marketplaces.json` — 런타임에 동기화된 마켓플레이스 캐시 (소스 자체는 `extraKnownMarketplaces`가 source of truth)
 - `agents/`, `commands/`, `hooks/`, `skills/` — 직접 작성한 자산 (빈 디렉토리는 `.gitkeep`)
 
-> `plugins/installed_plugins.json`은 **트래킹하지 않는다**. 머신별 절대 경로/타임스탬프가 박혀 매번 diff가 발생하고, `enabledPlugins` + 마켓플레이스 정보만으로 `/plugin`이 재생성한다.
+> `plugins/` 디렉터리는 **전혀 트래킹하지 않는다**. `known_marketplaces.json`과 `installed_plugins.json` 모두 머신별 절대 경로/타임스탬프가 박힌 캐시 파일이며, `settings.json`의 `extraKnownMarketplaces` + `enabledPlugins`가 source of truth로서 `/plugin` 실행 시 Claude Code가 재생성한다.
 
 활성 플러그인 세트는 `settings.json`의 `enabledPlugins`에서 관리한다. 마켓플레이스는 기본 `anthropics/claude-plugins-official` + `extraKnownMarketplaces`에 사용자 추가 (예: `openai/codex-plugin-cc`).
 
@@ -145,23 +144,9 @@ cd ~/repo/dotfiles && stow -R claude
 > 만들어도 repo로 자동 흘러가지 **않으므로**, 반드시 `claude/.claude/` 쪽에
 > 먼저 작성하고 `stow -R claude`로 재동기화한다.
 
-#### Symlink 복구 (`/plugin` 실행 후)
-
-Claude Code는 `/plugin`에서 plugin 관련 JSON을 **temp-file + atomic rename**으로 저장한다. atomic rename은 심링크를 보존하지 않으므로 `~/.claude/plugins/known_marketplaces.json`이 실파일로 교체된다 (`settings.json`/`.mcp.json`은 다른 코드 경로라 무사).
-
-매번 `/plugin` 후 다음으로 복구:
-
-```bash
-cp ~/.claude/plugins/known_marketplaces.json ~/repo/dotfiles/claude/.claude/plugins/
-rm ~/.claude/plugins/known_marketplaces.json
-stow -R -d ~/repo/dotfiles -t ~ claude
-```
-
-> 또는 `git status`로 변경된 내용만 확인하고 그대로 두는 것도 가능 — 다음 `stow -R`에서 자동 복구된다.
-
 #### macOS ↔ Linux 이동
 
-`known_marketplaces.json`은 `installLocation` 필드에 `/Users/...` 또는 `/home/...` 절대 경로를 포함한다. 다른 OS 머신에 적용 후엔 `/plugin` 메뉴에서 재설치하면 Claude Code가 경로를 재작성한다.
+`settings.json`, `.mcp.json`, `agents/`, `commands/`, `hooks/`, `skills/` 모두 OS 독립적이라 별도 작업 없이 그대로 stow된다. 플러그인 캐시(`~/.claude/plugins/`)는 `/plugin`이 머신에 맞게 재생성하므로 OS 이동 시 신경 쓸 필요 없음.
 
 ## 참고
 

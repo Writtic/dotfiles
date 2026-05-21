@@ -14,11 +14,12 @@
 #   (emacs and spacemacs are intentionally managed outside this repo)
 #
 # Claude Code (claude package):
-#   - Tracks only user-authored config + the marketplace registry under
-#     claude/.claude/. Heavy runtime state (sessions/, todos/, cache/,
-#     history.jsonl, ...) and the per-install manifest
-#     (plugins/installed_plugins.json) are .gitignored. Settings tracked:
-#     settings.json, .mcp.json (no secrets), plugins/known_marketplaces.json.
+#   - Tracks only user-authored config under claude/.claude/. Heavy runtime
+#     state (sessions/, todos/, cache/, history.jsonl, plugins/...) and the
+#     marketplace cache are .gitignored. Settings tracked: settings.json,
+#     .mcp.json (no secrets), agents/, commands/, hooks/, skills/.
+#     Marketplaces are declared via extraKnownMarketplaces in settings.json;
+#     Claude Code regenerates plugins/known_marketplaces.json from that.
 #   - On a fresh machine: after stow completes, launch `claude` and run
 #     `/plugin` to install plugins listed under `enabledPlugins` in
 #     settings.json from the known marketplaces.
@@ -173,13 +174,15 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 		echo "WARN: tpm clone failed (offline?)" >&2
 fi
 
-# Claude Code: nudge plugin sync if marketplace registry is stowed but the
-# plugin cache is empty. Claude Code itself owns marketplace clone + plugin
-# download — we just remind the user to trigger it once on a fresh machine.
-CLAUDE_REGISTRY="$HOME/.claude/plugins/known_marketplaces.json"
+# Claude Code: nudge plugin sync when settings declares enabled plugins but
+# the plugin cache hasn't been built (fresh machine). Claude Code itself owns
+# marketplace clone + plugin download — we just remind the user to trigger it.
+CLAUDE_SETTINGS="$HOME/.claude/settings.json"
 CLAUDE_CACHE="$HOME/.claude/plugins/cache"
-if [ -e "$CLAUDE_REGISTRY" ] && [ ! -d "$CLAUDE_CACHE" ]; then
-	echo ":: Claude Code: marketplace registry present but plugin cache missing."
+if [ -f "$CLAUDE_SETTINGS" ] \
+	&& grep -q '"enabledPlugins"' "$CLAUDE_SETTINGS" \
+	&& [ ! -d "$CLAUDE_CACHE" ]; then
+	echo ":: Claude Code: enabledPlugins declared but plugin cache missing."
 	echo "   Run 'claude' and execute '/plugin' to install enabled plugins."
 fi
 
