@@ -46,9 +46,10 @@ claude/.claude/*
 !claude/.claude/hooks/
 !claude/.claude/skills/
 !claude/.claude/plugins/
-# Inside plugins/, only the manifests are tracked — never the cache/checkout.
+# Inside plugins/, only the marketplace registry is tracked — never the cache
+# or per-install manifest (installed_plugins.json is rewritten on every /plugin
+# run with machine-specific paths/timestamps and is regenerated automatically).
 claude/.claude/plugins/*
-!claude/.claude/plugins/installed_plugins.json
 !claude/.claude/plugins/known_marketplaces.json
 # Inside skills/, third-party skills (their own .git, package.json, bin/) are
 # installed at runtime — track only user-authored skills you commit by hand.

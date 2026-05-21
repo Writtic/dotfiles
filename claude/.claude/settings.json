@@ -7,8 +7,16 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
-    "linear@claude-plugins-official": true
+    "linear@claude-plugins-official": true,
+    "codex@openai-codex": true
   },
-  "language": "한국어",
-  "skipDangerousModePermissionPrompt": true
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
+  },
+  "language": "한국어"
 }

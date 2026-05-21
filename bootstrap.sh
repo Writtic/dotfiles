@@ -14,13 +14,14 @@
 #   (emacs and spacemacs are intentionally managed outside this repo)
 #
 # Claude Code (claude package):
-#   - Tracks only user-authored config + plugin manifests under claude/.claude/.
-#     Heavy runtime state (sessions/, todos/, cache/, history.jsonl, ...) is
-#     .gitignored. Settings tracked: settings.json, .mcp.json (no secrets),
-#     plugins/{installed_plugins,known_marketplaces}.json.
+#   - Tracks only user-authored config + the marketplace registry under
+#     claude/.claude/. Heavy runtime state (sessions/, todos/, cache/,
+#     history.jsonl, ...) and the per-install manifest
+#     (plugins/installed_plugins.json) are .gitignored. Settings tracked:
+#     settings.json, .mcp.json (no secrets), plugins/known_marketplaces.json.
 #   - On a fresh machine: after stow completes, launch `claude` and run
-#     `/plugin` to materialize the marketplace checkouts + plugin caches that
-#     installed_plugins.json points at.
+#     `/plugin` to install plugins listed under `enabledPlugins` in
+#     settings.json from the known marketplaces.
 #
 # Post-stow hooks (idempotent): vim-plug, tmux tpm, nvim -> vim symlinks.
 #
@@ -172,14 +173,14 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 		echo "WARN: tpm clone failed (offline?)" >&2
 fi
 
-# Claude Code: nudge plugin sync if manifest is stowed but cache is empty.
-# Claude Code itself owns marketplace clone + plugin download — we just remind
-# the user to trigger it once on a fresh machine.
-CLAUDE_MANIFEST="$HOME/.claude/plugins/installed_plugins.json"
+# Claude Code: nudge plugin sync if marketplace registry is stowed but the
+# plugin cache is empty. Claude Code itself owns marketplace clone + plugin
+# download — we just remind the user to trigger it once on a fresh machine.
+CLAUDE_REGISTRY="$HOME/.claude/plugins/known_marketplaces.json"
 CLAUDE_CACHE="$HOME/.claude/plugins/cache"
-if [ -e "$CLAUDE_MANIFEST" ] && [ ! -d "$CLAUDE_CACHE" ]; then
-	echo ":: Claude Code: plugin manifest present but cache missing."
-	echo "   Run 'claude' and execute '/plugin' to materialize installed plugins."
+if [ -e "$CLAUDE_REGISTRY" ] && [ ! -d "$CLAUDE_CACHE" ]; then
+	echo ":: Claude Code: marketplace registry present but plugin cache missing."
+	echo "   Run 'claude' and execute '/plugin' to install enabled plugins."
 fi
 
 # CCometixLine (https://github.com/Haleclipse/CCometixLine) — statusline tool
@@ -187,11 +188,16 @@ fi
 # Distributed as npm package @cometix/ccline; we stow only the settings
 # reference and let bootstrap install the binary + create the path indirection
 # that settings.json points at (~/.claude/ccline/ccline).
+# Version pinned for reproducibility — bump deliberately, not implicitly.
+CCLINE_VERSION="1.1.2"
 CCLINE_LINK="$HOME/.claude/ccline/ccline"
-if [ ! -x "$CCLINE_LINK" ] && [ ! -L "$CCLINE_LINK" ]; then
+# `-x` follows symlinks: real-file-and-executable OR working-symlink → skip.
+# Broken symlink (-L true, -x false) falls through and gets repaired below.
+if [ ! -x "$CCLINE_LINK" ]; then
 	if command -v npm >/dev/null 2>&1; then
-		echo ":: installing CCometixLine (@cometix/ccline) globally via npm"
-		npm install -g @cometix/ccline >/dev/null 2>&1 || \
+		echo ":: installing CCometixLine (@cometix/ccline@$CCLINE_VERSION) globally via npm"
+		# stdout silenced (install progress noise); stderr surfaced for real errors.
+		npm install -g "@cometix/ccline@$CCLINE_VERSION" >/dev/null || \
 			echo "WARN: ccline install failed" >&2
 		NPM_PREFIX="$(npm config get prefix 2>/dev/null || true)"
 		if [ -n "$NPM_PREFIX" ] && [ -x "$NPM_PREFIX/bin/ccline" ]; then
@@ -201,7 +207,7 @@ if [ ! -x "$CCLINE_LINK" ] && [ ! -L "$CCLINE_LINK" ]; then
 		fi
 	else
 		echo "NOTE: npm not found — skip CCometixLine install." >&2
-		echo "   Manually: npm install -g @cometix/ccline && \\" >&2
+		echo "   Manually: npm install -g @cometix/ccline@$CCLINE_VERSION && \\" >&2
 		echo "             mkdir -p ~/.claude/ccline && \\" >&2
 		echo "             ln -s \"\$(npm config get prefix)/bin/ccline\" ~/.claude/ccline/ccline" >&2
 	fi
