@@ -3,6 +3,15 @@ name: pull-request
 description: Use when creating or editing a pull request description — running gh pr create, gh pr edit, finalizing a branch before opening a PR, or asked to write or improve PR body text.
 ---
 
+<!--
+  This skill is committed in-tree to deliberately shadow any upstream
+  `pull-request` skill that a Claude Code plugin may later ship. If both
+  load, this local copy takes precedence. If a future plugin update
+  changes that resolution order, rename this skill (e.g. to
+  `pull-request-house-style`) to keep the override intentional rather
+  than coincidental.
+-->
+
 # PR Description
 
 ## Preconditions
