@@ -182,5 +182,30 @@ if [ -e "$CLAUDE_MANIFEST" ] && [ ! -d "$CLAUDE_CACHE" ]; then
 	echo "   Run 'claude' and execute '/plugin' to materialize installed plugins."
 fi
 
+# CCometixLine (https://github.com/Haleclipse/CCometixLine) — statusline tool
+# referenced by claude/.claude/settings.json's statusLine.command field.
+# Distributed as npm package @cometix/ccline; we stow only the settings
+# reference and let bootstrap install the binary + create the path indirection
+# that settings.json points at (~/.claude/ccline/ccline).
+CCLINE_LINK="$HOME/.claude/ccline/ccline"
+if [ ! -x "$CCLINE_LINK" ] && [ ! -L "$CCLINE_LINK" ]; then
+	if command -v npm >/dev/null 2>&1; then
+		echo ":: installing CCometixLine (@cometix/ccline) globally via npm"
+		npm install -g @cometix/ccline >/dev/null 2>&1 || \
+			echo "WARN: ccline install failed" >&2
+		NPM_PREFIX="$(npm config get prefix 2>/dev/null || true)"
+		if [ -n "$NPM_PREFIX" ] && [ -x "$NPM_PREFIX/bin/ccline" ]; then
+			mkdir -p "$HOME/.claude/ccline"
+			ln -snf "$NPM_PREFIX/bin/ccline" "$CCLINE_LINK"
+			echo ":: ccline linked at $CCLINE_LINK"
+		fi
+	else
+		echo "NOTE: npm not found — skip CCometixLine install." >&2
+		echo "   Manually: npm install -g @cometix/ccline && \\" >&2
+		echo "             mkdir -p ~/.claude/ccline && \\" >&2
+		echo "             ln -s \"\$(npm config get prefix)/bin/ccline\" ~/.claude/ccline/ccline" >&2
+	fi
+fi
+
 echo ":: bootstrap complete."
 echo "   Next: open vim once to run :PlugInstall, tmux prefix+I to install tpm plugins."

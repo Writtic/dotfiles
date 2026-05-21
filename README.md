@@ -103,11 +103,20 @@ stow -nv -t ~ newpkg   # dry-run으로 심링크 맵 확인
 
 `claude/.claude/` 하위는 **화이트리스트** 방식으로 트래킹한다. `.gitignore`에서 전체 무시 후 다음만 추적:
 
-- `settings.json` — 언어, 활성 플러그인 목록 (토큰 없음 확인 필수)
+- `settings.json` — 언어, 활성 플러그인 목록, `statusLine` 등 (토큰 없음 확인 필수)
 - `.mcp.json` — MCP 서버 정의 (**API 키/토큰이 포함되면 절대 커밋 금지**)
 - `plugins/installed_plugins.json` — 설치 플러그인 + `gitCommitSha` 핀
 - `plugins/known_marketplaces.json` — 마켓플레이스 소스 (예: `anthropics/claude-plugins-official`)
 - `agents/`, `commands/`, `hooks/`, `skills/` — 직접 작성한 자산 (빈 디렉토리는 `.gitkeep`)
+
+현재 활성 플러그인 (마켓플레이스 `claude-plugins-official` = `anthropics/claude-plugins-official`):
+
+- `superpowers` v5.1.0 — `gitCommitSha` 핀 (`f2cbfbe`)
+- `ralph-loop` v1.0.0
+
+추가 외부 도구:
+
+- **CCometixLine** ([Haleclipse/CCometixLine](https://github.com/Haleclipse/CCometixLine)) — Claude Code statusline 도구. npm 패키지 `@cometix/ccline`로 배포. `settings.json`의 `statusLine.command`가 `~/.claude/ccline/ccline`을 가리킴. bootstrap이 새 머신에서 `npm install -g @cometix/ccline` + `~/.claude/ccline/ccline` 심링크를 자동으로 만든다 (`npm` 필요).
 
 추적 **제외**:
 
