@@ -25,5 +25,17 @@
     }
   },
   "language": "한국어",
-  "effortLevel": "xhigh"
+  "effortLevel": "xhigh",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/slack-notify.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
