@@ -1,0 +1,44 @@
+# Pull Request Creation Command
+Create a new branch, commit the changes, and submit a Pull Request.
+
+## Pull Request Template
+```markdown
+* Issue: https://linear.app/daangn/issue/MLI-XXX
+* Related Links:
+    - [Content]
+* Motivation:
+    - [Content]
+* Changes:
+    - [Content]
+```
+- Issue: Fill in XXX by referencing the branch name
+- Related Links: Leave links related to the tech spec or changes. If there are none in particular, leave it as None
+- Motivation: Describe the reason for writing this PR in two lines or less
+- Changes: Describe the semantic explanation of the code changes
+
+## How It Works
+- Create a new branch based on the current changes
+- Format the modified files using Biome
+- Analyze the changes and automatically separate them into logical units for committing
+- Each commit focuses on a single logical change or feature
+- Write a descriptive commit message appropriate for each logical unit
+- Push the branch to remote
+
+## PR Description Writing Guidelines
+- Wrap variable and function names in backticks (`), but do not overuse them
+- Use polite informal style ("해요체") when writing
+- Do not use emojis, emoticons, or headers
+- Focus on the meaning and reason behind code changes rather than just listing changes
+- When there are many changes, group them up to 2 levels deep so that changes of the same nature can be easily recognized
+- Look at the big picture, and keep the number of 1st-depth list items to a maximum of 4
+- Write each list item of the changes within 120 characters
+- Attach external links that may serve as reference for the changes if necessary
+- Do not append the phrase "🤖 Generated with Claude Code"
+
+## Automatic Commit Separation Guidelines
+- Separate commits by feature, component, or concern
+- Group related file changes into the same commit
+- Separate refactoring from feature additions
+- Each commit should be understandable independently
+- Separate unrelated changes into separate commits
+- Utilize bullet point depth to represent the hierarchical structure of changes
