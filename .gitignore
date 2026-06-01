@@ -26,9 +26,11 @@ Thumbs.db
 # Claude Code project-local state for THIS repo
 /.claude/
 
-# Superpowers process artifacts (brainstorm specs, implementation plans).
-# Local-only working notes — kept on disk, not tracked in the repo.
-docs/superpowers/
+# All docs/ are local-only working notes — brainstorm specs, implementation
+# plans (superpowers), ce-compound learnings, design notes. Kept on disk so
+# they don't pile up in the repo or confuse teammates who can't access them.
+# Use docs/* (not docs/) so a specific file can still be re-included with !.
+docs/*
 
 # Third-party plugin caches dropped into stowed package dirs at runtime
 vim/.vim/autoload/
