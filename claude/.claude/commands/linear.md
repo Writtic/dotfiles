@@ -11,8 +11,9 @@ Analyzes the current branch's changes and creates a new Linear issue.
 1. Check changes with `git diff main` or `git diff origin/main`
 2. Check recent commit messages with `git log`
 3. Compose the issue content based on changed files and commit messages
-4. Create the issue under the ml-infra team
-5. Provide the issue ID and URL
+4. Fill out Johan as the asignee
+5. Create the issue under the ml-infra team
+6. Provide the issue ID and URL
 
 **Issue structure:**
 - Title: Automatically extracted from commit messages or changes
