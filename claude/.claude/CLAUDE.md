@@ -1,5 +1,8 @@
 # Global Instructions
 
+Cross-repo rules that apply everywhere. Each repo's own CLAUDE.md owns its repo-local conventions;
+this file is only for what holds across every repo. Currently that's the LLM Wiki workflow below.
+
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 
 My work knowledge (decisions, architecture, debugging learnings, design specs, prompts) is
@@ -11,6 +14,13 @@ single point that aggregates that knowledge across repos.
 Wiki:  ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki
 Canon: Work/LLMWiki/CLAUDE.md   ← schema, conventions, workflows. Follow it before reading/writing the wiki.
 ```
+
+**Canon-unreachable fallback** — the canon lives in the wiki, which may briefly vanish (iCloud; see Sync guards).
+If you can't read it, this is the minimum to write a valid page without it (reconcile against the full canon next session):
+- Folders: `systems/` `decisions/` `learnings/` `specs/` `prompts/`; root `index.md` (catalog) + `log.md` (append-only).
+- Frontmatter on every page: `type, module, status, created, updated, tags, related, source` (dates `YYYY-MM-DD`).
+- Every non-`system` page links to ≥1 `systems/` page (systems are the hub). Use `[[wikilinks]]`; leave no orphans.
+- `log.md` entries: `## [YYYY-MM-DD] <op> | <title>`, `<op>` ∈ `ingest|compound-sync|spec-sync|query|lint|seed|meta`.
 
 ### RECALL — before non-trivial work, decisions, plans, or solution design
 Use the `llmwiki-researcher` agent to surface relevant prior knowledge from the wiki.
@@ -27,7 +37,9 @@ Full procedure lives in the canon above.
 
 ### Sync guards
 - Write to the wiki **directly** with Write/Edit (absolute path). Use obsidian-mcp only as a search fallback.
-- (Recommended) Register the Wiki path `**` under `permissions.allow` in `~/.claude/settings.json` for Read/Edit/Write
-  so writes work without permission prompts from other repos. Without it, prompts may appear depending on mode.
+- **Required for unattended sync**: register the Wiki path under `permissions.allow` in `~/.claude/settings.json`
+  for Read/Edit/Write (e.g. `Edit(~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki/**)`).
+  The wiki always sits outside whatever repo you're in, so without this rule every wiki write prompts for permission
+  and breaks the flow. Scope the rule to the wiki path — don't allow a bare `**`.
 - The wiki lives on an iCloud path and may briefly vanish → on write failure, **don't abort**; leave a note in the repo
   and reconcile next session. A wiki-sync failure must never block repo-local capture (ce-compound, etc.). The wiki is a secondary artifact.

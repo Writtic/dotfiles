@@ -3,7 +3,12 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "allow": [
+      "Read(~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki/**)",
+      "Edit(~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki/**)",
+      "Write(~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki/**)"
+    ]
   },
   "hooks": {
     "Stop": [
@@ -12,6 +17,18 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/slack-notify.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/ce-compound-wiki-sync.sh",
+            "statusMessage": "Checking for LLM Wiki sync trigger"
           }
         ]
       }
