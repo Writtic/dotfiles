@@ -1,7 +1,24 @@
 # Global Instructions
 
 Cross-repo rules that apply everywhere. Each repo's own CLAUDE.md owns its repo-local conventions;
-this file is only for what holds across every repo. Currently that's the LLM Wiki workflow below.
+this file is only for what holds across every repo: the house writing voice and the LLM Wiki workflow below.
+
+## House writing voice — plain, concrete, no AI tells
+
+Every prose artifact I produce (PR descriptions, commit messages, Linear/Jira issues and comments,
+design notes, status updates, docs) is written plainly and factually, not in AI-slop register.
+
+The full checklist lives in the `writing-style` skill. Invoke it whenever you draft or edit such prose,
+alongside the format-owning skill (`pull-request`, `git-commit`) or command (`/create-pr`, `/linear`).
+The skill owns voice; the invoking context owns format (template, 해요체, headers, depth).
+
+**Fallback minimum** (hold even when the skill is not loaded):
+- No em-dash (—); split with a comma or a period.
+- No contrastive negation ("not just X but Y", "단순히 X가 아니라 Y").
+- No smell words (delve, leverage, intricate, pivotal, crucial, foster, harness, unlock, showcase, myriad)
+  and no self-aggrandizing adjectives (clean, elegant, powerful, robust, seamless, comprehensive).
+- No marketing tone. State what the change does; do not sell it.
+- Prefer plain, concrete words over internal jargon; spell out a causal chain in steps, not one compressed term.
 
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 

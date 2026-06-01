@@ -2,6 +2,11 @@
 
 Automatically analyzes the current Git branch's changes to manage Linear issues.
 
+**Writing voice:** all issue titles, descriptions, and comments follow the `writing-style` skill — invoke it.
+That skill owns the voice rules (no em-dash, no contrastive negation, no smell words, no marketing tone,
+plain and concrete over jargon). This command owns the issue/comment structure below. The "What Not to Write"
+section near the end is the same intent applied to Linear.
+
 ## Commands
 
 ### `/linear create`

@@ -17,6 +17,8 @@ One commit = one concern the reviewer can hold in mind at once. A commit that mi
 
 `git diff` already carries the *what*. The commit message carries the *why* and the framing the diff cannot show: the incident that triggered the change, the constraint that ruled out the alternative, the contract being honored. If the message restates the diff, it has spent its space on nothing.
 
+**Voice:** this skill owns the split, the structure, and house-style detection (Step 2). The *voice* of the message text (word choice, sentence shape, anti-slop, plain-concrete phrasing) is owned by the `writing-style` skill — load it alongside this one. The detected house style (Step 2) wins over that skill's generic Conventional-Commits default; a Korean noun-ending repo stays Korean noun-ending.
+
 ## Hard rules
 
 1. **No AI-attribution trailer.** Never append `Co-Authored-By: Claude <noreply@anthropic.com>` or any equivalent AI-attribution line to a commit message. The default Bash-tool prompt suggests it — strip it explicitly before invoking `git commit`. Legitimate trailers required by the repo (`Signed-off-by:`, `Refs:`, `Fixes:`, `Reviewed-by:`, etc.) are fine; this rule targets AI-attribution only.
@@ -174,6 +176,7 @@ If any of these thoughts surface, the plan is failing:
 
 | File | Load when | Skip when |
 |---|---|---|
+| `writing-style` skill | Always, while drafting message text — it owns the voice (anti-slop, plain-concrete) | Never skip; the split is this skill's job, the wording is its job |
 | `splitting.md` | Create mode with a multi-concern working tree; need `add -p` / file-level add / stash strategy / patch generation guidance | Single file, single concern — no split needed |
 | `reshaping.md` | Reshape mode — `reset --soft`, `rebase -i`, cherry-pick sequences, pushed-commit guard details | Create mode |
 | `style.md` | Step 2, when repo style is not already established in conversation context | Same repo's style already inferred in this conversation |

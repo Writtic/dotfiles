@@ -26,6 +26,8 @@ GitHub already shows the file list, line counts, and diff. Your description carr
 
 **Hard rule 2:** never append a "Generated with [Claude Code](https://claude.com/claude-code)" footer (or any equivalent AI-attribution line) to the description. The default Bash-tool example for `gh pr create` includes this line — strip it. Commit messages use a `Co-Authored-By` trailer; PR descriptions do not get one.
 
+**Voice:** this skill owns PR *structure* (template, sections, the five checks). The *voice* (word choice, sentence shape, anti-slop, plain-concrete phrasing) is owned by the `writing-style` skill — load it alongside this one. Its generic format defaults are subordinate to the template you detect in Step 1 and the house style you match in Step 4.
+
 ## When to use / not
 
 **Use:** writing or editing any PR body, on any platform that surfaces a description.
@@ -154,6 +156,7 @@ All of these are rationalizations for skipping the actual work. The description 
 
 | File | Load when | Skip when |
 |---|---|---|
+| `writing-style` skill | Always, while drafting or editing the body — it owns the voice (anti-slop, plain-concrete) | Never skip; structure is this skill's job, voice is its job |
 | `templates.md` | Step 1 found no PR template file anywhere in the repo | Any `.github/` or `docs/` template file exists — that file is the source of truth |
 | `gathering.md` | Layer 1 (conversation + `git log` + branch name) leaves Outcome or Cause ambiguous, OR an issue is referenced and unread, OR you are editing an existing PR, OR you need to detect house language/style | Layer 1 alone yields a confident draft and the repo style is already evident from context |
 | `examples.md` | A self-verification check failed and the fix is not obvious | All checks pass, or the fix is obvious |

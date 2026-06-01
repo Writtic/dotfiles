@@ -25,6 +25,12 @@ Create a new branch, commit the changes, and submit a Pull Request.
 - Push the branch to remote
 
 ## PR Description Writing Guidelines
+
+Voice (word choice, sentence shape, anti-slop) comes from the `writing-style` skill — invoke it. It is the
+source of truth for the no-em-dash / no-contrastive-negation / no-smell-word / no-marketing rules and the
+plain-concrete principle. The bullets below are this command's **format** specifics, which take precedence
+over the skill's generic format defaults.
+
 - Wrap variable and function names in backticks (`), but do not overuse them
 - Use polite informal style ("해요체") when writing
 - Do not use emojis, emoticons, or headers
@@ -36,6 +42,10 @@ Create a new branch, commit the changes, and submit a Pull Request.
 - Do not append the phrase "🤖 Generated with Claude Code"
 
 ## Automatic Commit Separation Guidelines
+
+For splitting and message wording, follow the `git-commit` skill (split criteria, house-style detection)
+and the `writing-style` skill (message voice). The bullets below summarize the split intent.
+
 - Separate commits by feature, component, or concern
 - Group related file changes into the same commit
 - Separate refactoring from feature additions
