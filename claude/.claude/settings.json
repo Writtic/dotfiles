@@ -35,13 +35,15 @@
       "source": {
         "source": "github",
         "repo": "openai/codex-plugin-cc"
-      }
+      },
+      "autoUpdate": true
     },
     "compound-engineering-plugin": {
       "source": {
         "source": "github",
         "repo": "EveryInc/compound-engineering-plugin"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "language": "한국어",
