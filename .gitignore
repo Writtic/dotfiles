@@ -26,6 +26,10 @@ Thumbs.db
 # Claude Code project-local state for THIS repo
 /.claude/
 
+# Superpowers process artifacts (brainstorm specs, implementation plans).
+# Local-only working notes — kept on disk, not tracked in the repo.
+docs/superpowers/
+
 # Third-party plugin caches dropped into stowed package dirs at runtime
 vim/.vim/autoload/
 vim/.vim/plugged/
