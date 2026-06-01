@@ -148,6 +148,7 @@ All changes committed
 
 ## What Not to Write
 
+- **Design or implementation documents** — never attach, embed, or link them, and never paste their contents into the issue/comment. This includes brainstorming specs (`docs/superpowers/specs/**`), plans (`docs/superpowers/plans/**`), solution learnings (`docs/solutions/**`), and any local design/architecture notes. These are local working artifacts that are **not committed**, so teammates cannot open them — referencing them only causes confusion. Distill the conclusion into the issue body instead of pointing at the document.
 - Self-evident details from the diff (listing changed functions/classes/parameters)
 - Speculative background not in commit messages ("probably because of -")
 - Generic effect statements ("readability improved", "maintainability improved")
@@ -165,3 +166,4 @@ All changes committed
 - Without an issue ID, only `create` is available
 - Uncommitted changes are also included
 - PRs are auto-linked to Linear, so no separate PR link is needed
+- Never attach or reference local design/implementation docs (they are not committed and teammates cannot access them) — write the distilled conclusion directly into the issue
