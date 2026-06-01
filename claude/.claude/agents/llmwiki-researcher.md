@@ -138,3 +138,4 @@ for a human reading it with Obsidian open, not for field parsing. Write the pros
 - Read repo code or docs outside the wiki.
 - Invent answers when the wiki is silent.
 - Search `prompts/` unless explicitly asked for a reusable prompt.
+- Surface `_meta/` pages (wiki-internal bookkeeping) — they are out of scope for recall.
