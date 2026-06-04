@@ -14,7 +14,7 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 INPUT=$(cat)
 command -v jq >/dev/null 2>&1 || exit 0
 
-SKILL=$(printf '%s' "$INPUT" | jq -r '.tool_input.skill // empty' 2>/dev/null || echo "")
+SKILL=$(printf '%s' "$INPUT" | jq -r '.tool_input.skill // .tool_input.skill_name // empty' 2>/dev/null || echo "")
 [ -z "$SKILL" ] && exit 0
 
 case "$SKILL" in
