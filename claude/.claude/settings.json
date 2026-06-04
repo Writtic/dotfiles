@@ -56,21 +56,13 @@
     "ralph-loop@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "codex@openai-codex": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "compound-engineering@compound-engineering-plugin": true
+    "pyright-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
       "source": {
         "source": "github",
         "repo": "openai/codex-plugin-cc"
-      },
-      "autoUpdate": true
-    },
-    "compound-engineering-plugin": {
-      "source": {
-        "source": "github",
-        "repo": "EveryInc/compound-engineering-plugin"
       },
       "autoUpdate": true
     }
