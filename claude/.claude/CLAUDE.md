@@ -23,7 +23,7 @@ The skill owns voice; the invoking context owns format (template, 해요체, hea
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 
 My work knowledge (decisions, architecture, debugging learnings, design specs, prompts) is
-synthesized and maintained in a central Obsidian wiki. Repo-local capture (ce-compound
+synthesized and maintained in a central Obsidian wiki. Repo-local capture (`/compound`
 `docs/solutions/`, superpowers `docs/superpowers/`) stays as-is; the wiki sits on top as the
 single point that aggregates that knowledge across repos.
 
@@ -41,11 +41,11 @@ If you can't read it, this is the minimum to write a valid page without it (reco
 
 ### RECALL — before non-trivial work, decisions, plans, or solution design
 Use the `llmwiki-researcher` agent to surface relevant prior knowledge from the wiki.
-Run it **alongside** compound's `ce-learnings-researcher` (repo-local `docs/solutions/`) — central hub vs repo-local.
+Run it **alongside** `learnings-researcher` (repo-local `docs/solutions/`) — central hub vs repo-local.
 If surfaced content conflicts with current code/docs, don't follow it blindly: flag the conflict and judge staleness by date.
 
 ### SYNC — when the following land in a repo, mirror a synthesized page into the wiki + update `index.md`/`log.md`
-- `/ce-compound` learnings (`docs/solutions/**`)        → `LLMWiki/learnings/`
+- `/compound` learnings (`docs/solutions/**`)        → `LLMWiki/learnings/`
 - brainstorming specs    (`docs/superpowers/specs/**`)  → `LLMWiki/specs/`
 - writing-plans plans    (`docs/superpowers/plans/**`)  → `LLMWiki/specs/` (absorbed as links on the spec page)
 
@@ -59,4 +59,4 @@ Full procedure lives in the canon above.
   The wiki always sits outside whatever repo you're in, so without this rule every wiki write prompts for permission
   and breaks the flow. Scope the rule to the wiki path — don't allow a bare `**`.
 - The wiki lives on an iCloud path and may briefly vanish → on write failure, **don't abort**; leave a note in the repo
-  and reconcile next session. A wiki-sync failure must never block repo-local capture (ce-compound, etc.). The wiki is a secondary artifact.
+  and reconcile next session. A wiki-sync failure must never block repo-local capture (`/compound`, etc.). The wiki is a secondary artifact.
