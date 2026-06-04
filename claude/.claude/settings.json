@@ -21,13 +21,25 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/wiki-recall.sh",
+            "statusMessage": "Checking for LLM Wiki recall trigger"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/ce-compound-wiki-sync.sh",
+            "command": "~/.claude/hooks/wiki-sync.sh",
             "statusMessage": "Checking for LLM Wiki sync trigger"
           }
         ]
