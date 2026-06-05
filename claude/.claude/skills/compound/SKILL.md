@@ -1,6 +1,6 @@
 ---
 name: compound
-description: Document a recently solved problem to compound your knowledge into docs/solutions/, the repo-local knowledge store. Self-contained, no plugin dependency.
+description: Document a recently solved problem to compound your knowledge into the LLM Wiki (docs/ detail + learnings/ synthesis). Self-contained, no plugin dependency.
 argument-hint: "[optional: brief context] [mode:headless]"
 ---
 
@@ -10,7 +10,7 @@ Coordinate multiple subagents working in parallel to document a recently solved 
 
 ## Purpose
 
-Captures problem solutions while context is fresh, creating structured documentation in `docs/solutions/` with YAML frontmatter for searchability and future reference. Uses parallel subagents for maximum efficiency.
+Captures problem solutions while context is fresh, creating structured documentation directly in the LLM Wiki with YAML frontmatter for searchability and future reference. Writes two wiki pages per learning: a full detail page at `$WIKI/docs/<slug>.md` and a concise synthesis at `$WIKI/learnings/<slug>.md`. Uses parallel subagents for maximum efficiency.
 
 **Why "compound"?** Each documented solution compounds your team's knowledge. The first time you solve a problem takes research. Document it, and the next occurrence takes minutes. Knowledge compounds.
 
@@ -33,8 +33,8 @@ Check `$ARGUMENTS` for a `mode:headless` token. Tokens starting with `mode:` are
 
 | Mode | When | Behavior |
 |------|------|----------|
-| **Interactive** (default) | No mode token present | Ask Full vs Lightweight, prompt for Discoverability Check consent, end with "What's next?" |
-| **Headless** | `mode:headless` in arguments | No blocking questions. Run **Full mode**. Apply the Discoverability Check edit silently if a gap exists. Skip Phase 3 specialized reviews. End with a structured terminal report — no "What's next?" menu. |
+| **Interactive** (default) | No mode token present | Ask Full vs Lightweight, end with "What's next?" |
+| **Headless** | `mode:headless` in arguments | No blocking questions. Run **Full mode**. Skip Phase 3 specialized reviews. End with a structured terminal report — no "What's next?" menu. |
 
 Headless mode is intended for automations and skill-to-skill invocation where no human is present to answer questions. The doc itself is identical to what an interactive Full run would produce — classification work (track, category, overlap) follows the same rules and writes nothing extra into the artifact. Once detected, headless mode applies for the entire run.
 
@@ -73,13 +73,12 @@ In interactive mode, do NOT pre-select a mode, do NOT skip this prompt, and wait
 ### Full Mode
 
 <critical_requirement>
-**The primary deliverable is ONE file - the final documentation.**
+**The primary deliverables are TWO wiki pages - the detail doc and the synthesis.**
 
-Phase 1 subagents return TEXT DATA to the orchestrator. They must NOT use Write, Edit, or create any files. Only the orchestrator writes files. Beyond the Phase 2 solution doc, its other writes are maintenance side effects — not additional deliverables, and creating one when absent is expected, not a violation of this rule:
+Phase 1 subagents return TEXT DATA to the orchestrator. They must NOT use Write, Edit, or create any files. Only the orchestrator writes files. Beyond the Phase 2 wiki pages, its other writes are maintenance side effects — not additional deliverables, and creating one when absent is expected, not a violation of this rule:
 - **`CONCEPTS.md`** — create or update in Phase 2.4 (Vocabulary Capture) when a qualifying domain term surfaces.
-- **A project instruction file** (AGENTS.md or CLAUDE.md) — a small edit when the Discoverability Check finds a gap.
 
-Both ensure future agents can discover and ground in the knowledge store; neither makes the documentation any less the single deliverable.
+The wiki pages ensure knowledge is centralized and discoverable across repos.
 </critical_requirement>
 
 ### Phase 0.5: Auto Memory Scan
@@ -120,9 +119,9 @@ Launch research subagents. Each returns text data to the orchestrator.
      - **Bug track**: symptoms, root_cause, resolution_type
      - **Knowledge track**: applies_when (symptoms/root_cause/resolution_type optional)
    - Incorporates auto memory excerpts (if provided by the orchestrator) as supplementary evidence
-   - Reads `references/yaml-schema.md` for category mapping into `docs/solutions/`
-   - Suggests a filename using the pattern `[sanitized-problem-slug].md` — no date suffix, even if existing files in the target directory have one; the `date:` frontmatter field is the canonical creation date
-   - Returns: YAML frontmatter skeleton (must include `category:` field mapped from problem_type), category directory path, suggested filename, and which track applies
+   - Reads `references/yaml-schema.md` for category mapping (category lives in frontmatter/tags, not in path — `$WIKI/docs/` is flat)
+   - Suggests a filename using the pattern `[sanitized-problem-slug].md` — no date suffix, even if existing files in the wiki have one; the `date:` frontmatter field is the canonical creation date
+   - Returns: YAML frontmatter skeleton (must include `category:` field mapped from problem_type, plus `source_repo` for provenance), suggested slug/filename, and which track applies
    - Does not invent enum values, categories, or frontmatter fields from memory; reads the schema and mapping files above
    - Does not force bug-track fields onto knowledge-track learnings or vice versa
 
@@ -149,7 +148,7 @@ Launch research subagents. Each returns text data to the orchestrator.
    - **Examples**: Concrete before/after or usage examples showing the practice in action
 
 #### 3. **Related Docs Finder**
-   - Searches `docs/solutions/` for related documentation
+   - Searches `$WIKI/docs/` and `$WIKI/learnings/` for related documentation (where `WIKI="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki"`)
    - Identifies cross-references and links
    - Finds related GitHub issues
    - Flags any related learning or pattern docs that may now be stale, contradicted, or overly broad
@@ -162,7 +161,7 @@ Launch research subagents. Each returns text data to the orchestrator.
    **Search strategy (grep-first filtering for efficiency):**
 
    1. Extract keywords from the problem context: module names, technical terms, error messages, component types
-   2. If the problem category is clear, narrow search to the matching `docs/solutions/<category>/` directory
+   2. Search both `$WIKI/docs/` (flat directory, no category subdirectories) and `$WIKI/learnings/`
    3. Use the native content-search tool (e.g., Grep in Claude Code) to pre-filter candidate files BEFORE reading any content. Run multiple searches in parallel, case-insensitive, targeting frontmatter fields. These are template patterns -- substitute actual keywords:
       - `title:.*<keyword>`
       - `tags:.*(<keyword1>|<keyword2>)`
@@ -188,25 +187,36 @@ Launch research subagents. Each returns text data to the orchestrator.
 The orchestrating agent (main conversation) performs these steps:
 
 1. Collect all text results from Phase 1 subagents
-2. **Check the overlap assessment** from the Related Docs Finder before deciding what to write:
+
+2. **Availability guard.** Set `WIKI="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki"`. Run `ls "$WIKI/index.md"`. If the command fails (the iCloud path can vanish), STOP immediately and report one line: "LLM Wiki unreachable — capture deferred. Leave a note in the repo and reconcile next session." Do not write anything.
+
+3. **Check the overlap assessment** from the Related Docs Finder before deciding what to write:
 
    | Overlap | Action |
    |---------|--------|
-   | **High** — existing doc covers the same problem, root cause, and solution | **Update the existing doc** with fresher context (new code examples, updated references, additional prevention tips) rather than creating a duplicate. The existing doc's path and structure stay the same. |
-   | **Moderate** — same problem area but different angle, root cause, or solution | **Create the new doc** normally. Flag the overlap for Phase 2.5 to recommend consolidation review. |
-   | **Low or none** | **Create the new doc** normally. |
+   | **High** — existing wiki doc covers the same problem, root cause, and solution | **Update the existing `$WIKI/docs/<slug>.md`** with fresher context (new code examples, updated references, additional prevention tips) rather than creating a duplicate. The existing doc's path and frontmatter structure stay the same. Also update the corresponding `$WIKI/learnings/<slug>.md` synthesis if it exists. |
+   | **Moderate** — same problem area but different angle, root cause, or solution | **Create the new docs** normally. Flag the overlap for Phase 2.5 to recommend consolidation review. |
+   | **Low or none** | **Create the new docs** normally. |
 
    The reason to update rather than create: two docs describing the same problem and solution will inevitably drift apart. The newer context is fresher and more trustworthy, so fold it into the existing doc rather than creating a second one that immediately needs consolidation.
 
    When updating an existing doc, preserve its file path and frontmatter structure. Update the solution, code examples, prevention tips, and any stale references. Add a `last_updated: YYYY-MM-DD` field to the frontmatter. Do not change the title unless the problem framing has materially shifted.
 
-3. Assemble complete markdown file from the collected pieces, reading `assets/resolution-template.md` for the section structure of new docs
-4. Validate YAML frontmatter against `references/schema.yaml`, including the YAML-safety quoting rule for array items (see `references/yaml-schema.md` > YAML Safety Rules)
-5. Create directory if needed: `mkdir -p docs/solutions/[category]/`
-6. Write the file: either the updated existing doc or the new `docs/solutions/[category]/[filename].md`
-7. **Run `python3 scripts/validate-frontmatter.py <output-path>`** to catch silent-corruption parser-safety issues that the prose rules miss: malformed `---` delimiter lines, unquoted ` #` in scalar values (silent comment truncation), and unquoted `: ` in scalar values (silent mapping confusion). Exit 0 means the doc is parser-safe; exit 1 means the script's stderr names the offending field(s) and what to fix — quote the value(s), re-write the doc, and re-run until exit 0. Do not declare success while validation fails. The script does not enforce schema rules and does not flag YAML reserved-indicator characters (those produce loud parser errors downstream rather than silent corruption — out of scope). Uses Python 3 stdlib only (no PyYAML or other deps).
+4. Assemble the complete detail markdown from the collected pieces, reading `assets/resolution-template.md` for the section structure.
 
-When creating a new doc, preserve the section order from `assets/resolution-template.md` unless the user explicitly asks for a different structure.
+5. Validate YAML frontmatter against `references/schema.yaml`, including the YAML-safety quoting rule for array items (see `references/yaml-schema.md` > YAML Safety Rules). The detail doc frontmatter must include: `type: learning`, `module`, `status`, `created`, `updated`, `tags`, `source_repo` (the repo where the problem occurred, for provenance), `problem_type`, and `severity`. Do NOT include a `source_doc:` repo-path field. Include an outbound `[[wikilink]]` to the relevant `systems/` hub page in the frontmatter `related:` field. Do NOT add a back-link to `learnings/`.
+
+6. **Write the DETAIL doc to `$WIKI/docs/<slug>.md`**: the fully assembled content from step 4. The `docs/` directory is flat — no subdirectories; category lives in frontmatter `tags` and `problem_type`, not in the path.
+
+7. **Run `python3 claude/.claude/skills/compound/scripts/validate-frontmatter.py "$WIKI/docs/<slug>.md"`** to catch silent-corruption parser-safety issues: malformed `---` delimiter lines, unquoted ` #` in scalar values (silent comment truncation), and unquoted `: ` in scalar values (silent mapping confusion). Exit 0 means the doc is parser-safe; exit 1 means the script's stderr names the offending field(s) and what to fix — quote the value(s), re-write the doc, and re-run until exit 0. Do not declare success while validation fails.
+
+8. **Write the SYNTHESIS doc to `$WIKI/learnings/<slug>.md`**: a concise synthesis of the learning. Its frontmatter must include `detail: "[[docs/<slug>]]"` (one-way link to the detail doc) and a `related:` field with a `[[systems/...]]` hub wikilink. The synthesis is the catalog-facing entry — keep it short (problem in one sentence, solution in two, key takeaway).
+
+9. **Cross-link**: update the relevant `$WIKI/systems/<hub>.md` page's "관련 작업/맥락" section (or equivalent) with a wikilink to the new `[[learnings/<slug>]]`.
+
+10. **Update `$WIKI/index.md`**: add the learning under the Learnings category with a `→ [[systems/...]]` hub reference and note the detail doc at `docs/<slug>.md`. Append to **`$WIKI/log.md`** a new entry: `## [YYYY-MM-DD] compound | <title>`.
+
+When creating new docs, preserve the section order from `assets/resolution-template.md` unless the user explicitly asks for a different structure.
 
 </sequential_tasks>
 
@@ -235,47 +245,6 @@ If no terms qualified after applying the reference's criteria, record that outco
 새 학습이 기존 문서를 낡게 만들 수 있으면, 어느 문서가 후보인지 한 줄로 권고만 한다.
 refresh 스킬은 이 환경에 없으므로 호출하지 않는다. 권고는 성공 출력의 "Refresh recommendation" 줄에 싣는다.
 
-### Discoverability Check
-
-After the learning is written and the refresh decision is made, check whether the project's instruction files would lead an agent to discover and search `docs/solutions/` before starting work in a documented area. This runs every time — the knowledge store only compounds value when agents can find it.
-
-1. Identify which root-level instruction files exist (AGENTS.md, CLAUDE.md, or both). Read the file(s) and determine which holds the substantive content — one file may just be a shim that `@`-includes the other (e.g., `CLAUDE.md` containing only `@AGENTS.md`, or vice versa). The substantive file is the assessment and edit target; ignore shims. If neither file exists, skip this check entirely.
-2. Assess whether an agent reading the instruction files would learn three things:
-   - That a searchable knowledge store of documented solutions exists
-   - Enough about its structure to search effectively (category organization, YAML frontmatter fields like `module`, `tags`, `problem_type`)
-   - When to search it (before implementing features, debugging issues, or making decisions in documented areas — learnings may cover bugs, best practices, workflow patterns, or other institutional knowledge)
-
-   This is a semantic assessment, not a string match. The information could be a line in an architecture section, a bullet in a gotchas section, spread across multiple places, or expressed without ever using the exact path `docs/solutions/`. Use judgment — if an agent would reasonably discover and use the knowledge store after reading the file, the check passes.
-
-3. If the spirit is already met, no action needed — move on.
-4. If not:
-   a. Based on the file's existing structure, tone, and density, identify where a mention fits naturally. Before creating a new section, check whether the information could be a single line in the closest related section — an architecture tree, a directory listing, a documentation section, or a conventions block. A line added to an existing section is almost always better than a new headed section. Only add a new section as a last resort when the file has clear sectioned structure and nothing is even remotely related.
-   b. Draft the smallest addition that communicates the three things. Match the file's existing style and density. The addition should describe the knowledge store itself, not the plugin — an agent without the plugin should still find value in it.
-
-      Keep the tone informational, not imperative. Express timing as description, not instruction — "relevant when implementing or debugging in documented areas" rather than "check before implementing or debugging." Imperative directives like "always search before implementing" cause redundant reads when a workflow already includes a dedicated search step. The goal is awareness: agents learn the folder exists and what's in it, then use their own judgment about when to consult it.
-
-      Examples of calibration (not templates — adapt to the file):
-
-      When there's an existing directory listing or architecture section — add a line:
-      ```
-      docs/solutions/  # documented solutions to past problems (bugs, best practices, workflow patterns), organized by category with YAML frontmatter (module, tags, problem_type)
-      ```
-
-      When nothing in the file is a natural fit — a small headed section is appropriate:
-      ```
-      ## Documented Solutions
-
-      `docs/solutions/` — documented solutions to past problems (bugs, best practices, workflow patterns), organized by category with YAML frontmatter (`module`, `tags`, `problem_type`). Relevant when implementing or debugging in documented areas.
-      ```
-   c. In full interactive mode, explain to the user why this matters — agents working in this repo (including fresh sessions, other tools, or collaborators without the plugin) won't know to check `docs/solutions/` unless the instruction file surfaces it. Show the proposed change and where it would go, then use the platform's blocking question tool to get consent before making the edit: `AskUserQuestion` in Claude Code (call `ToolSearch` with `select:AskUserQuestion` first if its schema isn't loaded), `request_user_input` in Codex, `ask_user` in Gemini, `ask_user` in Pi (requires the `pi-ask-user` extension). Fall back to presenting the proposal in chat only when no blocking tool exists in the harness or the call errors (e.g., Codex edit modes) — not because a schema load is required. Never silently skip the question. In lightweight mode, output a one-liner note and move on. In headless mode, apply the edit directly without prompting and surface it in the terminal report under "Instruction-file edit"
-
-5. **If `CONCEPTS.md` exists at repo root, run a parallel discoverability check for it.** Assess whether the instruction file would lead an agent to discover the project's shared domain vocabulary. Use the same workflow as the `docs/solutions/` check above: same target file, same edit-placement judgment, same consent-then-edit interaction shape per mode. A line in an existing section is almost always better than a new headed section. Example calibration when nothing else fits:
-
-   ```
-   CONCEPTS.md  # shared domain vocabulary (entities, named processes, status concepts) — relevant when orienting to the codebase or discussing domain concepts
-   ```
-
-   **Skip this step entirely if `CONCEPTS.md` does not exist** — never nag for an artifact the project has not adopted. When skipped, this step produces no output and no edit.
 
 ### Phase 3: Optional Enhancement
 
@@ -311,35 +280,35 @@ Headless mode forces Full and does not enter Lightweight — automations get the
 The orchestrator (main conversation) performs ALL of the following in one sequential pass:
 
 1. **Extract from conversation**: Identify the problem and solution from conversation history. Also scan the "user's auto-memory" block injected into your system prompt, if present (Claude Code only) -- use any relevant notes as supplementary context alongside conversation history. Tag any memory-sourced content incorporated into the final doc with "(auto memory [claude])"
-2. **Classify**: Read `references/schema.yaml` and `references/yaml-schema.md`, then determine track (bug vs knowledge), category, and filename
-3. **Write minimal doc**: Create `docs/solutions/[category]/[filename].md` using the appropriate track template from `assets/resolution-template.md`, with:
-   - YAML frontmatter with track-appropriate fields, applying the YAML-safety quoting rule for array items (see `references/yaml-schema.md` > YAML Safety Rules)
-   - Bug track: Problem, root cause, solution with key code snippets, one prevention tip
-   - Knowledge track: Context, guidance with key examples, one applicability note
-4. **Vocabulary capture (update-only)**: if `CONCEPTS.md` exists at repo root, read `references/concepts-vocabulary.md`, then scan the new doc and the conversation for qualifying terms and add/refine entries silently (same criteria as Phase 2.4). Do **not** bootstrap or seed in lightweight mode — if `CONCEPTS.md` does not exist, defer creation to a Full run, which owns seeding. Record the outcome in the output (e.g., "Vocabulary: 1 entry refined" or "scanned, no qualifying terms"). If you refined `CONCEPTS.md` and a quick read of `AGENTS.md`/`CLAUDE.md` shows it isn't surfaced there, add the discoverability tip to the output below — lightweight **tips**, it does not edit instruction files (a Full run owns that edit).
-5. **Skip specialized agent reviews** (Phase 3) to conserve context
+2. **Classify**: Read `references/schema.yaml` and `references/yaml-schema.md`, then determine track (bug vs knowledge), category, and slug/filename
+3. **Availability guard**: Set `WIKI="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki"`. Run `ls "$WIKI/index.md"`. If it fails, stop and report: "LLM Wiki unreachable — capture deferred. Reconcile next session." Do not write anything.
+4. **Write minimal docs**: Write `$WIKI/docs/<slug>.md` (detail) and `$WIKI/learnings/<slug>.md` (synthesis) using the appropriate track template from `assets/resolution-template.md`, with:
+   - Detail doc: YAML frontmatter with track-appropriate fields (`type: learning`, `source_repo`, `problem_type`, `severity`, hub wikilink in `related:`), applying the YAML-safety quoting rule for array items (see `references/yaml-schema.md` > YAML Safety Rules). No back-link to learnings/.
+   - Synthesis doc: frontmatter includes `detail: "[[docs/<slug>]]"` and a `[[systems/...]]` hub wikilink
+   - Bug track body: Problem, root cause, solution with key code snippets, one prevention tip
+   - Knowledge track body: Context, guidance with key examples, one applicability note
+   - After writing, append to `$WIKI/log.md`: `## [YYYY-MM-DD] compound | <title>`
+5. **Vocabulary capture (update-only)**: if `CONCEPTS.md` exists at repo root, read `references/concepts-vocabulary.md`, then scan the new doc and the conversation for qualifying terms and add/refine entries silently (same criteria as Phase 2.4). Do **not** bootstrap or seed in lightweight mode — if `CONCEPTS.md` does not exist, defer creation to a Full run, which owns seeding. Record the outcome in the output (e.g., "Vocabulary: 1 entry refined" or "scanned, no qualifying terms").
+6. **Skip specialized agent reviews** (Phase 3) to conserve context
 
 **Lightweight output:**
 ```
 ✓ Documentation complete (lightweight mode)
 
-File created:
-- docs/solutions/[category]/[filename].md
+Files written:
+- LLMWiki/docs/<slug>.md  (detail)
+- LLMWiki/learnings/<slug>.md  (synthesis)
 
-[If discoverability check found instruction files don't surface the knowledge store:]
-Tip: Your AGENTS.md/CLAUDE.md doesn't surface docs/solutions/ to agents —
-a brief mention helps all agents discover these learnings.
-
-[If CONCEPTS.md was refined this run and isn't surfaced in the instruction files:]
-Tip: Your AGENTS.md/CLAUDE.md doesn't surface CONCEPTS.md —
-a one-line mention helps agents find the shared vocabulary.
+[If CONCEPTS.md was refined this run:]
+Vocabulary: <N entry refined | scanned, no qualifying terms>
 
 Note: This was created in lightweight mode. For richer documentation
-(cross-references, detailed prevention strategies, specialized reviews),
+(cross-references, detailed prevention strategies, specialized reviews,
+systems/ cross-linking, index.md update),
 re-run /compound in a fresh session.
 ```
 
-**No subagents are launched. No parallel tasks. The solution doc is the one deliverable** (Phase 2.4's update-only vocabulary capture may also refine an existing `CONCEPTS.md`).
+**No subagents are launched. No parallel tasks. The two wiki pages are the deliverables** (vocabulary capture may also refine an existing `CONCEPTS.md`).
 
 In lightweight mode, the overlap check is skipped (no Related Docs Finder subagent). This means lightweight mode may create a doc that overlaps with an existing one. That is acceptable — a later refresh pass will catch it. Only note a refresh candidate if there is an obvious narrow target. Do not broaden into a large refresh sweep from a lightweight session.
 
@@ -370,41 +339,33 @@ In lightweight mode, the overlap check is skipped (no Related Docs Finder subage
 
 ## What It Creates
 
-**Organized documentation:**
+**Two wiki pages per learning (flat structure, category in frontmatter):**
 
-- File: `docs/solutions/[category]/[filename].md`
+- Detail: `LLMWiki/docs/<slug>.md` — full content, systems/ hub wikilink, `source_repo` provenance field
+- Synthesis: `LLMWiki/learnings/<slug>.md` — concise entry, `detail: "[[docs/<slug>]]"` one-way link, systems/ hub wikilink
 
-**Categories auto-detected from problem:**
+**Category lives in `problem_type` frontmatter and `tags` — not in directory paths.**
 
-Bug track:
-- build-errors/
-- test-failures/
-- runtime-errors/
-- performance-issues/
-- database-issues/
-- security-issues/
-- ui-bugs/
-- integration-issues/
-- logic-errors/
+Bug track problem_types:
+- `build_error`, `test_failure`, `runtime_error`, `performance_issue`, `database_issue`, `security_issue`, `ui_bug`, `integration_issue`, `logic_error`
 
-Knowledge track:
-- architecture-patterns/ — architectural or structural patterns (agent/skill/pipeline/workflow shape decisions)
-- design-patterns/ — reusable non-architectural design approaches (content generation, interaction patterns, prompt shapes)
-- tooling-decisions/ — language, library, or tool choices with durable rationale
-- conventions/ — team-agreed way of doing something, captured so it survives turnover
-- workflow-issues/
-- developer-experience/
-- documentation-gaps/
-- best-practices/ — fallback only, use when no narrower knowledge-track value applies
+Knowledge track problem_types:
+- `architecture_pattern` — architectural or structural patterns (agent/skill/pipeline/workflow shape decisions)
+- `design_pattern` — reusable non-architectural design approaches (content generation, interaction patterns, prompt shapes)
+- `tooling_decision` — language, library, or tool choices with durable rationale
+- `convention` — team-agreed way of doing something, captured so it survives turnover
+- `workflow_issue`, `developer_experience`, `documentation_gap`
+- `best_practice` — fallback only, use when no narrower knowledge-track value applies
 
 ## Common Mistakes to Avoid
 
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| Subagents write files like `context-analysis.md`, `solution-draft.md` | Subagents return text data; orchestrator writes one final file |
-| Research and assembly run in parallel | Research completes → then assembly runs |
-| Multiple files created during workflow | One solution doc written or updated: `docs/solutions/[category]/[filename].md` (plus optional maintenance writes: a `CONCEPTS.md` create/update from Phase 2.4 and a small instruction-file edit for discoverability) |
-| Creating a new doc when an existing doc covers the same problem | Check overlap assessment; update the existing doc when overlap is high |
+| Wrong | Correct |
+|-------|---------|
+| Subagents write files like `context-analysis.md`, `solution-draft.md` | Subagents return text data; orchestrator writes files |
+| Research and assembly run in parallel | Research completes, then assembly runs |
+| Writing to the repo's `docs/solutions/` directory | Write to `$WIKI/docs/<slug>.md` (detail) and `$WIKI/learnings/<slug>.md` (synthesis) |
+| Creating a new doc when an existing wiki doc covers the same problem | Check overlap assessment; update the existing wiki doc when overlap is high |
+| `learnings/<slug>` linking back to `docs/<slug>` only — no reverse link | One-way: learnings/ links to docs/; docs/ must NOT link back to learnings/ |
 
 ## Success Output
 
@@ -415,11 +376,11 @@ Emit a structured terminal report and end the turn. No "What's next?" question, 
 ```
 ✓ Documentation complete (headless mode)
 
-File: docs/solutions/<category>/<filename>.md  (created | updated)
+Detail:    LLMWiki/docs/<slug>.md  (created | updated)
+Synthesis: LLMWiki/learnings/<slug>.md  (created | updated)
 Track: <bug | knowledge>
 Category: <category>
-Overlap: <none | low | moderate — see <path> | high — existing doc updated>
-Instruction-file edit: <none needed | applied to <path> | gap noted, not applied>
+Overlap: <none | low | moderate — see <slug> | high — existing doc updated>
 CONCEPTS.md: <scanned, no qualifying terms | created with N entries (M seeded from the learning's area) | updated — N added, N refined>
 Refresh recommendation: <none | scope hint for a future refresh pass>
 
@@ -445,7 +406,7 @@ Documentation skipped
 Auto memory: 2 relevant entries used as supplementary evidence
 
 Subagent Results:
-  ✓ Context Analyzer: Identified performance_issue in brief_system, category: performance-issues/
+  ✓ Context Analyzer: Identified performance_issue in brief_system, category: performance-issues
   ✓ Solution Extractor: 3 code fixes, prevention strategies
   ✓ Related Docs Finder: 2 related issues
 
@@ -454,11 +415,12 @@ Specialized Agent Reviews (Auto-Triggered):
   ✓ code-reviewer: Solution is appropriately minimal
 
 Files written:
-- docs/solutions/performance-issues/n-plus-one-brief-generation.md (created)
+- LLMWiki/docs/n-plus-one-brief-generation.md (created)
+- LLMWiki/learnings/n-plus-one-brief-generation.md (created)
 - CONCEPTS.md (created with 3 entries: BriefSystem, EmailQueue, Brief Status)
 
-This documentation will be searchable for future reference when similar
-issues occur in the Email Processing or Brief System modules.
+This learning is now in the wiki and will surface via wiki recall when
+similar issues occur in the Email Processing or Brief System modules.
 
 What's next?
 1. Continue workflow (recommended)
@@ -475,12 +437,13 @@ What's next?
 ```
 ✓ Documentation updated (existing doc refreshed with current context)
 
-Overlap detected: docs/solutions/performance-issues/n-plus-one-queries.md
+Overlap detected: LLMWiki/docs/n-plus-one-queries.md
   Matched dimensions: problem statement, root cause, solution, referenced files
   Action: Updated existing doc with fresher code examples and prevention tips
 
-File updated:
-- docs/solutions/performance-issues/n-plus-one-queries.md (added last_updated: 2026-03-24)
+Files updated:
+- LLMWiki/docs/n-plus-one-queries.md (added last_updated: 2026-03-24)
+- LLMWiki/learnings/n-plus-one-queries.md (synthesis updated)
 ```
 
 ## The Compounding Philosophy
@@ -488,9 +451,9 @@ File updated:
 This creates a compounding knowledge system:
 
 1. First time you solve "N+1 query in brief generation" → Research (30 min)
-2. Document the solution → docs/solutions/performance-issues/n-plus-one-briefs.md (5 min)
-3. Next time similar issue occurs → Quick lookup (2 min)
-4. Knowledge compounds → Team gets smarter
+2. Document the solution → LLMWiki/docs/n-plus-one-briefs.md + learnings/ synthesis (5 min)
+3. Next time similar issue occurs → Wiki recall surfaces it in 2 min
+4. Knowledge compounds across every repo
 
 The feedback loop:
 
@@ -510,7 +473,7 @@ Build → Test → Find Issue → Research → Improve → Document → Validate
 
 ## Output
 
-Writes the final learning directly into `docs/solutions/`.
+Writes two wiki pages directly into the LLM Wiki: `$WIKI/docs/<slug>.md` (detail) and `$WIKI/learnings/<slug>.md` (synthesis). Nothing is written to the repo.
 
 ## Applicable Specialized Agents
 

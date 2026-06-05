@@ -1,5 +1,5 @@
 ---
-description: Document a recently solved problem into docs/solutions/ (self-contained compound capture)
+description: Document a recently solved problem into the LLM Wiki (docs/ detail + learnings/ synthesis)
 argument-hint: "[optional: brief context] [mode:headless]"
 ---
 

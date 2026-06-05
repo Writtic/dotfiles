@@ -1,12 +1,12 @@
 # YAML Frontmatter Schema
 
-`schema.yaml` in this directory is the canonical contract for `docs/solutions/` frontmatter written by `/compound`.
+`schema.yaml` in this directory is the canonical contract for wiki frontmatter written by `/compound`. Pages are written to `LLMWiki/docs/<slug>.md` (detail) and `LLMWiki/learnings/<slug>.md` (synthesis) — NOT to the repo's `docs/solutions/`. The `docs/` directory in the wiki is flat: `docs/<slug>.md` with no category subdirectories. Category lives in the `problem_type` frontmatter field and `tags`, not in the path.
 
 Use this file as the quick reference for:
 - required fields
 - enum values
 - validation expectations
-- category mapping
+- category mapping (frontmatter, not directory)
 - track classification (bug vs knowledge)
 
 ## Tracks
@@ -60,23 +60,25 @@ Docs created before the track system may have `symptoms`/`root_cause`/`resolutio
 
 ## Category Mapping
 
-- `build_error` -> `docs/solutions/build-errors/`
-- `test_failure` -> `docs/solutions/test-failures/`
-- `runtime_error` -> `docs/solutions/runtime-errors/`
-- `performance_issue` -> `docs/solutions/performance-issues/`
-- `database_issue` -> `docs/solutions/database-issues/`
-- `security_issue` -> `docs/solutions/security-issues/`
-- `ui_bug` -> `docs/solutions/ui-bugs/`
-- `integration_issue` -> `docs/solutions/integration-issues/`
-- `logic_error` -> `docs/solutions/logic-errors/`
-- `developer_experience` -> `docs/solutions/developer-experience/`
-- `workflow_issue` -> `docs/solutions/workflow-issues/`
-- `best_practice` -> `docs/solutions/best-practices/`
-- `documentation_gap` -> `docs/solutions/documentation-gaps/`
-- `architecture_pattern` -> `docs/solutions/architecture-patterns/`
-- `design_pattern` -> `docs/solutions/design-patterns/`
-- `tooling_decision` -> `docs/solutions/tooling-decisions/`
-- `convention` -> `docs/solutions/conventions/`
+Category maps to a `tags` value and the `problem_type` frontmatter field. All wiki docs live in `LLMWiki/docs/<slug>.md` (flat, no subdirectories). Use these values in frontmatter `tags` for searchability:
+
+- `build_error` -> tag: `build-errors`
+- `test_failure` -> tag: `test-failures`
+- `runtime_error` -> tag: `runtime-errors`
+- `performance_issue` -> tag: `performance-issues`
+- `database_issue` -> tag: `database-issues`
+- `security_issue` -> tag: `security-issues`
+- `ui_bug` -> tag: `ui-bugs`
+- `integration_issue` -> tag: `integration-issues`
+- `logic_error` -> tag: `logic-errors`
+- `developer_experience` -> tag: `developer-experience`
+- `workflow_issue` -> tag: `workflow-issues`
+- `best_practice` -> tag: `best-practices`
+- `documentation_gap` -> tag: `documentation-gaps`
+- `architecture_pattern` -> tag: `architecture-patterns`
+- `design_pattern` -> tag: `design-patterns`
+- `tooling_decision` -> tag: `tooling-decisions`
+- `convention` -> tag: `conventions`
 
 ## Validation Rules
 
