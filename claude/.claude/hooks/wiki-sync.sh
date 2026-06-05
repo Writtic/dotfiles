@@ -1,10 +1,9 @@
 #!/bin/bash
-# Claude Code PostToolUse hook — compound / superpowers → LLM Wiki sync reminder.
+# Claude Code PostToolUse hook — superpowers specs/plans → LLM Wiki sync reminder.
 #
-# Fires when a learning file lands under docs/solutions/ (the compound
-# completion signal) or a spec/plan lands under docs/superpowers/specs/ or
+# Fires when a spec or plan lands under docs/superpowers/specs/ or
 # docs/superpowers/plans/, and injects a reminder to mirror a synthesized page
-# into the central LLM Wiki. This is the automation behind the SYNC step in
+# into LLMWiki/specs/. This is the automation behind the SYNC step in
 # ~/.claude/CLAUDE.md ("LLM Wiki" section): text instructions get forgotten,
 # a hook does not.
 #
@@ -27,23 +26,6 @@ FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null
 [ -z "$FILE" ] && exit 0
 
 case "$FILE" in
-  *docs/solutions/*.md)
-    REL="docs/solutions/${FILE##*docs/solutions/}"
-    jq -n --arg f "$REL" '{
-      hookSpecificOutput: {
-        hookEventName: "PostToolUse",
-        additionalContext: (
-          "LLM Wiki SYNC trigger (compound-sync): a learning landed at \($f). " +
-          "Per ~/.claude/CLAUDE.md (LLM Wiki — SYNC), mirror a *synthesized* page into " +
-          "LLMWiki/learnings/ (frontmatter per the learning schema, source_doc → this repo path), " +
-          "update related systems/ page(s), cross-link, then update index.md and append a " +
-          "`compound-sync` entry to log.md. Synthesize, do not copy-paste. If the iCloud wiki " +
-          "path is unreachable, leave a note in the repo and reconcile next session — a wiki-sync " +
-          "failure must never block the repo-local capture."
-        )
-      }
-    }'
-    ;;
   *docs/superpowers/specs/*.md|*docs/superpowers/plans/*.md)
     REL="docs/superpowers/${FILE##*docs/superpowers/}"
     jq -n --arg f "$REL" '{
