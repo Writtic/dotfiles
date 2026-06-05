@@ -23,9 +23,9 @@ The skill owns voice; the invoking context owns format (template, 해요체, hea
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 
 My work knowledge (decisions, architecture, debugging learnings, design specs, prompts) is
-synthesized and maintained in a central Obsidian wiki. Repo-local capture (`/compound`
-`docs/solutions/`, superpowers `docs/superpowers/`) stays as-is; the wiki sits on top as the
-single point that aggregates that knowledge across repos.
+synthesized and maintained in a central Obsidian wiki. Compound writes directly to the wiki;
+superpowers still writes to the repo first (`docs/superpowers/`). The wiki is the single point
+that aggregates knowledge across repos.
 
 ```
 Wiki:  ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki
@@ -41,13 +41,11 @@ If you can't read it, this is the minimum to write a valid page without it (reco
 
 ### RECALL — before non-trivial work, decisions, plans, or solution design
 Use the `llmwiki-researcher` agent to surface relevant prior knowledge from the wiki.
-Run it **alongside** `learnings-researcher` (repo-local `docs/solutions/`) — central hub vs repo-local.
 If surfaced content conflicts with current code/docs, don't follow it blindly: flag the conflict and judge staleness by date.
 
-### SYNC — when the following land in a repo, mirror a synthesized page into the wiki + update `index.md`/`log.md`
-- `/compound` learnings (`docs/solutions/**`)        → `LLMWiki/learnings/`
-- brainstorming specs    (`docs/superpowers/specs/**`)  → `LLMWiki/specs/`
-- writing-plans plans    (`docs/superpowers/plans/**`)  → `LLMWiki/specs/` (absorbed as links on the spec page)
+### SYNC — knowledge lands directly in the wiki
+- `/compound` writes the detail to `LLMWiki/docs/` and a synthesis to `LLMWiki/learnings/` directly.
+- brainstorming/writing-plans specs (`docs/superpowers/**`) → mirror into `LLMWiki/specs/` (self-contained; superpowers is third-party so it still writes the repo first).
 
 **Synthesize, don't copy-paste**: update related `systems/`/`decisions/` pages, cross-link, and flag contradictions.
 Full procedure lives in the canon above.
