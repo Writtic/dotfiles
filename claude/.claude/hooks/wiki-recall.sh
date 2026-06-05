@@ -25,10 +25,9 @@ case "$SKILL" in
         additionalContext: (
           "LLM Wiki RECALL trigger: superpowers brainstorming/writing-plans is starting. " +
           "Per ~/.claude/CLAUDE.md (LLM Wiki — RECALL), before designing, dispatch the " +
-          "llmwiki-researcher agent (central wiki, cross-repo) AND the learnings-researcher " +
-          "agent (repo-local docs/solutions/) in parallel with the same <work-context>. " +
-          "Surface prior knowledge first; flag any conflict with current code by date, do not " +
-          "follow stale findings blindly. The wiki is a secondary artifact — if it is " +
+          "llmwiki-researcher agent to surface relevant prior knowledge from the central wiki " +
+          "(systems, decisions, learnings, specs). Flag any conflict with current code by date; " +
+          "do not follow stale findings blindly. The wiki is a secondary artifact — if it is " +
           "unreachable, proceed without it."
         )
       }
