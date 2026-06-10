@@ -31,6 +31,7 @@ source of truth for the no-em-dash / no-contrastive-negation / no-smell-word / n
 plain-concrete principle. The bullets below are this command's **format** specifics, which take precedence
 over the skill's generic format defaults.
 
+- Don't include the ticket number in the title
 - Wrap variable and function names in backticks (`), but do not overuse them
 - Use polite informal style ("해요체") when writing
 - Do not use emojis, emoticons, or headers
