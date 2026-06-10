@@ -21,6 +21,7 @@ Review the code changes in a PR and leave inline comments.
 - Handle escape characters according to markdown conventions
 - Use code suggestions when necessary
 - Provide related documents or reference links used in the review if available
+- Lead with the key takeaway, then explain
 
 **Review Status:**
 - No issues: Use `event="APPROVE"` with a single comment "LGTM!"
