@@ -23,9 +23,9 @@ The skill owns voice; the invoking context owns format (template, 해요체, hea
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 
 My work knowledge (decisions, architecture, debugging learnings, design specs, prompts) is
-synthesized and maintained in a central Obsidian wiki. Compound writes directly to the wiki;
-superpowers still writes to the repo first (`docs/superpowers/`). The wiki is the single point
-that aggregates knowledge across repos.
+synthesized and maintained in a central Obsidian wiki. Both `/compound` and the superpowers
+brainstorming/writing-plans skills write directly to the wiki; the repo keeps no copy. The wiki is
+the single point that aggregates knowledge across repos.
 
 ```
 Wiki:  ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki
@@ -34,7 +34,7 @@ Canon: Work/LLMWiki/CLAUDE.md   ← schema, conventions, workflows. Follow it be
 
 **Canon-unreachable fallback** — the canon lives in the wiki, which may briefly vanish (iCloud; see Sync guards).
 If you can't read it, this is the minimum to write a valid page without it (reconcile against the full canon next session):
-- Folders: `systems/` `decisions/` `learnings/` `specs/` `prompts/`; root `index.md` (catalog) + `log.md` (append-only).
+- Folders: `systems/` `decisions/` `learnings/` `specs/` `plans/` `prompts/`; root `index.md` (catalog) + `log.md` (append-only).
 - Frontmatter on every page: `type, module, status, created, updated, tags, related, source` (dates `YYYY-MM-DD`).
 - Every non-`system` page links to ≥1 `systems/` page (systems are the hub). Use `[[wikilinks]]`; leave no orphans.
 - `log.md` entries: `## [YYYY-MM-DD] <op> | <title>`, `<op>` ∈ `ingest|compound-sync|spec-sync|query|lint|seed|meta`.
@@ -45,7 +45,8 @@ If surfaced content conflicts with current code/docs, don't follow it blindly: f
 
 ### SYNC — knowledge lands directly in the wiki
 - `/compound` writes the detail to `LLMWiki/docs/` and a synthesis to `LLMWiki/learnings/` directly.
-- brainstorming/writing-plans specs (`docs/superpowers/**`) → mirror into `LLMWiki/specs/` (self-contained; superpowers is third-party so it still writes the repo first).
+- brainstorming spec → write directly to `LLMWiki/specs/`; writing-plans plan → `LLMWiki/plans/`. Both skills document a location override (`User preferences for spec/plan location override this default`) — exercise it: author the page in the wiki (wiki frontmatter + systems link), and skip the skill's repo write and its "commit to git" step. No `docs/superpowers/` copy. The executor (executing-plans/subagent-driven-development) reads and updates the plan's checkboxes at the wiki path.
+  - Fallback only: if the wiki is unreachable, write to repo `docs/superpowers/` (gitignored) + leave a note, reconcile to the wiki next session.
 
 **Synthesize, don't copy-paste**: update related `systems/`/`decisions/` pages, cross-link, and flag contradictions.
 Full procedure lives in the canon above.
@@ -56,5 +57,6 @@ Full procedure lives in the canon above.
   for Read/Edit/Write (e.g. `Edit(~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Work/LLMWiki/**)`).
   The wiki always sits outside whatever repo you're in, so without this rule every wiki write prompts for permission
   and breaks the flow. Scope the rule to the wiki path — don't allow a bare `**`.
-- The wiki lives on an iCloud path and may briefly vanish → on write failure, **don't abort**; leave a note in the repo
-  and reconcile next session. A wiki-sync failure must never block repo-local capture (`/compound`, etc.). The wiki is a secondary artifact.
+- The wiki lives on an iCloud path and may briefly vanish → on write failure, **don't abort**; fall back to the repo
+  (gitignored `docs/superpowers/` for specs/plans, a note for compound) and reconcile to the wiki next session.
+  Resilience only: the wiki is the primary home, the repo fallback is a temporary holding spot, not a second copy to maintain.
