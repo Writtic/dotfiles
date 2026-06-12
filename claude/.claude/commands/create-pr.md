@@ -32,17 +32,17 @@ feat: changes title example
 
 ## PR Description Writing Guidelines
 
-Voice (word choice, sentence shape, anti-slop) comes from the `writing-style` skill — invoke it. It is the
+Voice (word choice, sentence shape, anti-slop) comes from the `writing-style` skill. Invoke it. It is the
 source of truth for the no-em-dash / no-contrastive-negation / no-smell-word / no-marketing rules and the
 plain-concrete principle. The bullets below are this command's **format** specifics, which take precedence
 over the skill's generic format defaults.
 
 - Don't include the ticket number in the title
-- Wrap variable and function names in backticks (`), but do not overuse them
+- Wrap variable and function names in backticks (`), but do not overuse them. Use the full identifier rather than an abbreviation (`tpu_queue_state_updater`, not `state_updater`)
 - Use polite informal style ("해요체") when writing
 - Do not use emojis, emoticons, or headers
-- Focus on the meaning and reason behind code changes rather than just listing changes
-- When there are many changes, group them up to 2 levels deep so that changes of the same nature can be easily recognized
+- Focus on the meaning and reason behind code changes rather than just listing changes. Start the Motivation from the structural cause (why the usual approach can't work), not the symptom, and name the precise execution context rather than a vague label
+- When there are many changes, group them up to 2 levels deep so that changes of the same nature can be easily recognized. If a single point has layers (cause, constraint, resolution), use nested bullets instead of one comma-chained sentence
 - Look at the big picture, and keep the number of 1st-depth list items to a maximum of 4
 - Write each list item of the changes within 120 characters
 - Attach external links that may serve as reference for the changes if necessary
