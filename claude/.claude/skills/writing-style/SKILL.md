@@ -54,6 +54,14 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 - **한국어 hedging 최소화**: drop unnecessary "~할 수 있습니다", "~의 정수", "~을 넘어서".
 - **마케팅 톤**: do not promote the change. State what it does.
 
+## 콜론(`:`)과 이모지 shortcode
+
+Slack·GitHub·Linear·Obsidian 등 `:shortcode:`를 이모지로 렌더하는 표면에서는 양옆이 붙은 `:단어:`가 이모지로 바뀔 수 있다.
+
+- 콜론을 남발하지 않는다. 문장 부호로 꼭 필요할 때만 쓴다.
+- 쓸 때는 콜론 뒤에 공백을 둔다 (`라벨: 본문`). shortcode는 내부에 공백을 담지 못하므로, 공백이 있으면 이모지로 해석되지 않는다.
+- 단어를 콜론으로 감싼 `:단어:` 형태를 피한다.
+
 ## Plain and concrete
 
 - 내부/영어 jargon을 일상어·구체 명사로 푼다: `floor` → "제한 변수", `ledger` → "in-flight 정보가 적재된 Redis", admission control/budget → "제출 조건", "과다 admit" → "과한 제출".
@@ -100,6 +108,7 @@ pull-request:
 정규식으로 검출하고, 걸리면 그 문장을 **재작성**한다 (완화가 아니라 재작성):
 
 - em-dash: `—` (그리고 dash로 쓰인 `--`)
+- 이모지 shortcode 충돌: `:[^\s:]+:` (콜론으로 단어를 감싼 형태. 콜론 뒤 공백으로 회피)
 - 대조 부정문: `not (just|only|merely)\b.*\bbut\b`, `단순히 .*아니라`, `에 그치지 않`
 - 은유 공식: `\bis the\b .* \bof\b`
 - 금지 단어: 위 lexical 목록 (대소문자 무시)
