@@ -2,6 +2,12 @@
 Create a new branch, commit the changes, and submit a Pull Request.
 
 ## Pull Request Template
+### PR Title
+```markdown
+feat: changes title example
+```
+
+### PR Descriptions
 ```markdown
 * Issue: https://linear.app/daangn/issue/MLI-XXX
 * Related Links:
