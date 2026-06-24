@@ -1,5 +1,4 @@
 {
-  "model": "opus[1m]",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
@@ -57,7 +56,10 @@
     "ralph-loop@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "codex@openai-codex": true,
-    "pyright-lsp@claude-plugins-official": true
+    "pyright-lsp@claude-plugins-official": true,
+    "watch@claude-video": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -66,8 +68,21 @@
         "repo": "openai/codex-plugin-cc"
       },
       "autoUpdate": true
+    },
+    "claude-video": {
+      "source": {
+        "source": "github",
+        "repo": "bradautomates/claude-video"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
     }
   },
   "language": "한국어",
-  "effortLevel": "xhigh"
+  "effortLevel": "xhigh",
+  "tui": "fullscreen"
 }
