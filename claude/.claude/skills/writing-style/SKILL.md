@@ -26,6 +26,14 @@ This skill governs how sentences read: word choice, sentence shape, honesty. It 
 
 When this skill's generic format defaults (bottom) disagree with a detected house style or the invoking context, the house style wins. Never reshape a Korean 해요체 PR into `## Summary / ## Changes` just because this skill names that template.
 
+## Code comments and docstrings in English
+
+Comments and docstrings inside source code are written in English. Prose that ships to a person (chat replies, PR descriptions, Linear/Jira issues, commit messages) follows the Korean 해요체 policy, but source-code comments and docstrings default to English.
+
+- New or edited comments and docstrings are written in English.
+- When an existing file uses Korean comments, a temporary mix with English is fine. Convert the parts you touch rather than rewriting the whole file.
+- English comments still follow this skill's voice: plain and concrete, no smell words, no em-dash, no marketing tone.
+
 ## Core principle
 
 Write so a tired reviewer understands on the first read with no decoding. Plain and concrete beats compressed and clever. Record facts; do not sell the change.
