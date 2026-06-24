@@ -151,6 +151,23 @@ All changes committed
 
 ---
 
+## Links
+
+Attach every external link as a Linear **link attachment**, not as an inline URL in the
+description or comment body. Applies to `create`, `update`, and `comment`.
+
+- Pass links through `save_issue`'s `links` field as `[{url, title}]`. The field is append-only,
+  so existing attachments are kept.
+- Covers Slack threads, dashboards (Datadog, Grafana), external docs, design references,
+  related GitHub issues, and any other external URL.
+- Give each link a short title (e.g. "Slack 스레드", "Datadog 대시보드"). Do not also leave the
+  same URL as text in the body; the attachment is the single home for the link.
+- PRs are already auto-linked (see Notes), so they need no manual link attachment.
+- This does not loosen "What Not to Write": local design/implementation docs are still never
+  attached or linked.
+
+---
+
 ## What Not to Write
 
 - **Design or implementation documents** — never attach, embed, or link them, and never paste their contents into the issue/comment. This includes brainstorming specs (`docs/superpowers/specs/**`), plans (`docs/superpowers/plans/**`), solution learnings (`docs/solutions/**`), and any local design/architecture notes. These are local working artifacts that are **not committed**, so teammates cannot open them — referencing them only causes confusion. Distill the conclusion into the issue body instead of pointing at the document.
