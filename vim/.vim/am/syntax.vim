@@ -13,8 +13,8 @@ set background=dark
 try
   colorscheme onedark
 catch /^Vim\%((\a\+)\)\=:E185/
-  " onedark not yet installed -- fall back silently.
-  colorscheme kalisi
+  " onedark not yet installed -- fall back to a built-in scheme silently.
+  silent! colorscheme habamax
 endtry
 let g:monochrome_italic_comments = 1
 
