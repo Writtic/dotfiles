@@ -38,6 +38,9 @@ vim/.vim/plugged/
 vim/.vim/bundle/
 tmux/.tmux/plugins/
 
+# Vim persistent-undo history (runtime state; can hold undo of sensitive files)
+vim/.vim/undodir/
+
 # Claude Code (claude/ stow package) — whitelist tracked files only.
 # Everything under claude/.claude/ is ignored except the explicit !-entries below.
 # Rationale: ~/.claude/ contains heavy runtime state (sessions, todos, cache,
