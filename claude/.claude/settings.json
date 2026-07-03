@@ -79,10 +79,12 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "language": "한국어",
   "effortLevel": "xhigh",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "model": "claude-fable-5[1m]"
 }
