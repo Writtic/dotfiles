@@ -33,6 +33,7 @@ Comments and docstrings inside source code are written in English. Prose that sh
 - New or edited comments and docstrings are written in English.
 - When an existing file uses Korean comments, a temporary mix with English is fine. Convert the parts you touch rather than rewriting the whole file.
 - English comments still follow this skill's voice: plain and concrete, no smell words, no em-dash, no marketing tone.
+- The same policy applies when reviewing. A diff that converts existing Korean comments to English follows this migration; do not flag it as a convention violation.
 
 ## Core principle
 
@@ -88,8 +89,9 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 - **괄호 부연 최소화**: 흐름을 끊는 보충 괄호를 뺀다. 괄호를 남길 땐 그 값이 독자에게 무엇인지 알려주는 데만 쓰고, 내부 구현 메커니즘(파생 출처, 멱등성 같은 동작 내막)은 핵심이 아니면 통째로 뺀다. `prefix(KV) cache` → `prefix cache`, `라우터 변경 없이(round-robin 유지)` → `라우터 변경 없이`, `(Pipeline pkid에서 파생)` → `(PipelineJob의 mid)`, `terminal 전이 시(잡당 1회)` → `terminal 전이 시`.
 - **불릿은 한 항목 한 메시지**: 효과 설명 꼬리나 둘째 문장을 잘라 한 줄로 만든다. "이 문서를 정리한다" 같은 메타성 항목은 지운다.
 - **영어 번역체를 우리말로**: 코드 식별자는 backtick으로 두되, "~을 만들다" 같은 직역 동사를 자연스러운 우리말로. `cross-pod 적중을 만들` → `Pod 간 prefix cache 적중률을 높일`.
-- **담백하게**: 강조용 따옴표("…")로 힘주지 말고 평문으로 쓴다. 비유적 단어("함정")는 중립어("부분")로.
+- **담백하게**: 강조용 따옴표("…")로 힘주지 말고 평문으로 쓴다. 비유적 단어("함정")는 중립어("부분")로. 비유적 동사구도 직설 서술로 바꾸고, 통용 외래어는 유지한다: `코드가 움직이면 낡으니` → `코드가 변경되면 outdate되니`.
 - **짧은 두 문장은 자연스럽게 잇는다**: `논의했어요. 하지만 ~` → `논의했지만, ~`.
+- **제안은 권유형으로 맺는다**: 대안을 제시하는 문장은 "~하는 쪽이 좋겠어요"로 끝낸다. "쪽"을 주어 삼아 근거 명사구를 얹은 비교문은 어색하다: `~쪽이 진단 정보가 더 많아요` → `~쪽이 더 좋겠어요`.
 - **참조는 텍스트가 아니라 링크**: 이슈 번호, 페이지명을 적을 때 실제 링크/멘션을 걸어 독자가 바로 이동하게 한다.
 
 ## Writing principles
