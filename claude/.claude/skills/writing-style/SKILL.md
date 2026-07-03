@@ -38,7 +38,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 
 본문은 3계층이다: 공통 코어(언어 불문) → 한국어 레이어(확장은 `references/korean.md`) → 영어 레이어.
 
-## 공통 코어 — hard bans: structural (top priority)
+## 공통 코어: hard bans, structural (top priority)
 
 - **대조 부정문**: "not just/only/merely X, but Y", "단순히 X가 아니라 Y", "X에 그치지 않고". `단순히 조회 최적화가 아니라 구조 개선이에요` → `조회 구조를 바꿔요`.
 - **은유 공식**: "X는 Y의 Z다", "X is the Y of Z". `Redis는 이 시스템의 심장이다` → `모든 잡 상태가 Redis를 거친다`.
@@ -48,7 +48,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 - **em-dash (—)**: 금지. `큐가 멈췄다 — lock 때문이다` → `큐가 멈췄다. lock 때문이다`.
 - **가운뎃점 (`·`)**: 나열 구분자 금지, 고유명사 쌍도 예외 없다. `생성·수정·삭제` → `생성, 수정, 삭제`.
 
-## 공통 코어 — hard bans: lexical
+## 공통 코어: hard bans, lexical
 
 - **자기과시 형용사**: clean, elegant, powerful, robust, seamless, comprehensive, 강력한, 우아한.
 - **smell 단어**: delve, tapestry, realm, landscape, leverage, intricate, pivotal, crucial, underscore, foster, harness, unlock, showcase, myriad.
@@ -57,7 +57,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 
 어휘 목록은 모델 세대에 따라 낡는다(delve는 2025년에 이미 줄었다). 주기적으로 최근 출력과 대조해 갱신한다.
 
-## 공통 코어 — 콜론(`:`)과 이모지 shortcode
+## 공통 코어: 콜론과 이모지 shortcode
 
 Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 서비스에서는 양옆이 붙은 `:단어:`가 이모지로 바뀔 수 있다.
 
@@ -65,7 +65,7 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 - 쓸 때는 콜론 뒤에 공백을 둔다 (`라벨: 본문`). shortcode는 내부에 공백을 담지 못하므로, 공백이 있으면 이모지로 해석되지 않는다.
 - 단어를 콜론으로 감싼 `:단어:` 형태를 피한다.
 
-## 공통 코어 — plain and concrete
+## 공통 코어: plain and concrete
 
 - 단어는 독자에게 가장 정확하면서 잘 읽히는 쪽을 고른다. 외래어 회피 자체가 목표는 아니다. 더 읽히는 우리말 등가어가 있으면 바꾸고(`emit해요` → `전송해요`, `terminal 전이 시` → `terminal로 상태가 바뀌면`), 그 외래어가 도메인에서 가장 정확하면 유지한다(`안 막아요` → `블로킹하지 않아요`). 내부 jargon은 구체 명사로 푼다: `floor` → "제한 변수", `ledger` → "in-flight 정보가 적재된 Redis".
 - 같은 대상을 도구/벤더의 분류어와 팀이 실제 쓰는 말이 다르게 부르면, 팀의 목적 중심 용어를 쓴다. 예: Datadog 분류상 "monitor"인 알람 정의 파일은 "모니터" 대신 "알람". 용어를 바꾼 뒤 한 문장에 같은 단어가 두 번 겹치면 한쪽을 풀어 반복을 없앤다.
@@ -74,7 +74,7 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 - 코드 식별자는 backtick으로 유지하되 옆에 일상어 설명을 붙인다.
 - 깊은 기술 설명을 요청받으면(예: "정확히 무슨 뜻이냐") 정밀함을 유지한다. 요약, 설명문에서는 평이함을 우선한다.
 
-## 공통 코어 — writing principles
+## 공통 코어: writing principles
 
 - diff와 변경된 파일을 근거로만 쓴다. 추측이나 일반론은 더하지 않는다 ("probably because…" 금지).
 - 길이 상한을 지킨다: 불릿당 한 줄, 설명은 3문장 이내.
