@@ -5,9 +5,23 @@ Review the code changes in a PR and leave inline comments.
 1. Check repository information with `gh repo view --json owner,name`
 2. Check PR information with `gh pr view --json number,headRefOid,body`
 3. Check changes with `gh pr diff`
-4. Analyze code changes and write review comments using the latest Opus model
-5. Show the written comments to the user and get confirmation
-6. Submit the review with `gh api` upon user approval
+4. Launch the auxiliary reviews (see Auxiliary Reviews below): `/codex:review --background` first, then `/ponytail-review` on the PR diff
+5. Analyze code changes and write review comments using the latest Opus model
+6. When the Codex background task completes, merge all findings (own + ponytail + codex) into one comment set per the merging rules
+7. Show the merged comments to the user with each comment's origin tagged, and get confirmation
+8. Submit the review with `gh api` upon user approval (origin tags stripped)
+
+## Auxiliary Reviews
+Two extra passes run alongside your own analysis and their findings are folded into the same inline comments.
+
+- `/codex:review --background`: launch it right after `gh pr diff` so it runs while you analyze. Codex reviews the **local git state**, not the PR by number, so the PR head must be checked out locally first. Compare `git rev-parse HEAD` with the PR's `headRefOid`; if they differ, ask the user whether to run `gh pr checkout <number>` or skip the Codex pass. Never switch branches without asking.
+- `/ponytail-review`: run it on the PR diff after launching Codex. It hunts over-engineering only (deletions, stdlib replacements, dead flexibility); treat it as a complement to your correctness-focused pass.
+
+**Merging rules:**
+- Dedup findings that point at the same file/line and issue; keep one comment.
+- Your own judgment governs. Drop auxiliary findings you assess as false positives and say so in the confirmation step.
+- Rewrite every adopted finding into this command's comment style (해요체, 1-2 sentences, inline anchor). Never paste Codex or ponytail output verbatim into the submitted review; show the raw Codex output to the user once during confirmation instead.
+- If the Codex task is still running when your own comments are ready, tell the user and wait for it before the confirmation step; if Codex fails or was skipped, proceed with the remaining sources and note it.
 
 ## Comment Writing Rules
 **Requirements:**
