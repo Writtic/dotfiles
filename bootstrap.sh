@@ -9,7 +9,7 @@
 #   ./bootstrap.sh --help       # show this help
 #
 # Packages:
-#   common : zsh vim tmux starship claude
+#   common : zsh vim tmux starship claude herdr
 #   linux  : xinit (X11 only; auto-skipped if empty)
 #   (emacs and spacemacs are intentionally managed outside this repo)
 #
@@ -67,7 +67,7 @@ if ! command -v stow >/dev/null 2>&1; then
 fi
 
 # -------- packages (bash 3.2: plain arrays, no assoc arrays) --------
-PACKAGES_COMMON=(zsh vim tmux starship claude)
+PACKAGES_COMMON=(zsh vim tmux starship claude herdr)
 PACKAGES_LINUX=(xinit)
 
 PACKAGES=("${PACKAGES_COMMON[@]}")

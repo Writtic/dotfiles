@@ -1,0 +1,23 @@
+# herdr keybindings, matched to the dotfiles tmux setup (Oh my tmux!, Ctrl-Space
+# prefix). Concept map: workspace = tmux session, tab = window, pane = pane.
+#
+# Only actions that differ from herdr's defaults are listed here. The rest of
+# herdr's defaults already line up with the tmux vim-style layout:
+#   focus hjkl, prefix+c/n/p tabs, prefix+[ copy-mode, prefix+x close-pane,
+#   prefix+z zoom, prefix+1..9 tab select.
+#
+# Apply: herdr server reload-config    Reset to stock: herdr config reset-keys
+
+[keys]
+prefix = "ctrl+space"          # tmux: set -g prefix C-Space
+detach = "prefix+d"            # tmux: prefix d
+
+# tab = tmux window; stock tmux uses prefix , (rename) and prefix & (kill)
+rename_tab = "prefix+comma"
+close_tab = "prefix+ampersand"
+
+# `-` draws a horizontal line (top/bottom), shift+`-` a vertical line
+# (left/right), same keys as tmux `-` and `_`. Swap the two if herdr splits
+# the opposite way for you.
+split_horizontal = "prefix+minus"        # top/bottom  (tmux: split-window -v)
+split_vertical = "prefix+shift+minus"    # left/right  (tmux: split-window -h)
