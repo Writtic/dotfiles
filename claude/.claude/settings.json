@@ -85,6 +85,5 @@
   },
   "language": "한국어",
   "effortLevel": "xhigh",
-  "tui": "fullscreen",
-  "model": "claude-fable-5[1m]"
+  "tui": "fullscreen"
 }
