@@ -428,6 +428,10 @@ bind C-Space send-prefix
 # display a message after toggling mouse support
 bind m run "cut -c3- '#{TMUX_CONF}' | sh -s _toggle_mouse" \; display 'mouse #{?#{mouse},on,off}'
 
+# swap current window left/right with Shift+arrows (focus follows the window)
+bind -n S-Left swap-window -t -1
+bind -n S-Right swap-window -t +1
+
 # move status line to top
 #set -g status-position top
 
