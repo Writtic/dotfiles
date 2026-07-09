@@ -5,11 +5,12 @@ this file is only for what holds across every repo: the house writing voice and 
 
 ## House writing voice — plain, concrete, no AI tells
 
-Every prose artifact I produce (PR descriptions, commit messages, Linear/Jira issues and comments,
-design notes, status updates, docs) is written plainly and factually, not in AI-slop register.
+Every prose artifact I produce (PR descriptions, PR review comments, commit messages, Linear/Jira
+issues and comments, design notes, status updates, docs) is written plainly and factually, not in
+AI-slop register.
 
 The full checklist lives in the `writing-style` skill. Invoke it whenever you draft or edit such prose,
-alongside the format-owning skill (`pull-request`, `git-commit`) or command (`/create-pr`, `/linear`).
+alongside the format-owning skill (`pull-request`, `git-commit`) or command (`/create-pr`, `/linear`, `/review-pr`).
 The skill owns voice; the invoking context owns format (template, 해요체, headers, depth).
 
 **Fallback minimum** (hold even when the skill is not loaded):

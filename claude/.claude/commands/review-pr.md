@@ -6,7 +6,7 @@ Review the code changes in a PR and leave inline comments.
 2. Check PR information with `gh pr view --json number,headRefOid,body`
 3. Check changes with `gh pr diff`
 4. Launch the auxiliary reviews (see Auxiliary Reviews below): `/codex:review --background` first, then `/ponytail-review` on the PR diff
-5. Analyze code changes and write review comments using the latest Opus model
+5. Invoke the `writing-style` skill, then analyze code changes and write review comments using the latest Opus model
 6. When the Codex background task completes, merge all findings (own + ponytail + codex) into one comment set per the merging rules
 7. Show the merged comments to the user with each comment's origin tagged, and get confirmation
 8. Submit the review with `gh api` upon user approval (origin tags stripped)
@@ -24,6 +24,8 @@ Two extra passes run alongside your own analysis and their findings are folded i
 - If the Codex task is still running when your own comments are ready, tell the user and wait for it before the confirmation step; if Codex fails or was skipped, proceed with the remaining sources and note it.
 
 ## Comment Writing Rules
+Voice is owned by the `writing-style` skill; invoking it before drafting any comment is mandatory, and its post-filter applies to every comment body. The rules below own the format only.
+
 **Requirements:**
 - Each comment must be an inline comment linked to a specific file and line
 - Write concisely in 1-2 sentences
