@@ -1,6 +1,6 @@
 ---
 name: writing-style
-description: Use when writing any prose that ships to a person: PR descriptions, commit messages, Linear/Jira issues and comments, design notes, status updates, READMEs, docs. Strips AI-writing tells (em-dash, contrastive negation, smell words, marketing adjectives) and enforces plain, concrete, fact-based phrasing. Owns voice only; the invoking context owns format. Load alongside pull-request / git-commit / the /create-pr and /linear commands.
+description: Use when writing any prose that ships to a person: PR descriptions, PR review comments, commit messages, Linear/Jira issues and comments, design notes, status updates, READMEs, docs. Strips AI-writing tells (em-dash, contrastive negation, smell words, marketing adjectives) and enforces plain, concrete, fact-based phrasing. Owns voice only; the invoking context owns format. Load alongside pull-request / git-commit / the /create-pr, /linear, and /review-pr commands.
 ---
 
 <!--
@@ -22,6 +22,7 @@ This skill governs how sentences read: word choice, sentence shape, honesty. It 
 | PR descriptions | `pull-request` skill (template detection, then house style) |
 | `/create-pr` | Linear PR template + 해요체, no headers |
 | `/linear` | issue / comment structure |
+| `/review-pr` | inline comment format (해요체, 1-2 sentences, line anchor) |
 
 When this skill's generic format defaults (bottom) disagree with a detected house style or the invoking context, the house style wins. Never reshape a Korean 해요체 PR into `## Summary / ## Changes` just because this skill names that template.
 
@@ -91,8 +92,11 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 
 | 상황 | 행동 |
 |---|---|
-| 한국어 산문을 작성/수정한다 (PR 본문, 이슈, 설계 문서, README, Slack 초안) | `references/korean.md`를 **반드시 읽고** 적용한다 |
+| 한국어 산문을 작성/수정한다 (PR 본문, 이슈, 설계 문서, README, Slack 초안, PR 리뷰 코멘트) | `references/korean.md`를 **반드시 읽고** 적용한다 |
 | 짧은 채팅 답변만 쓴다 | 본문 규칙으로 충분, 로드 생략 가능 |
+
+리뷰 코멘트는 짧아서 채팅 답변처럼 보이지만, PR 작성자에게 나가는 산문이다. korean.md의
+"행동 압축어"와 "리뷰 코멘트 톤" 섹션이 리뷰 코멘트에서 실측된 실패를 담고 있다.
 
 ## 영어 레이어
 
@@ -130,6 +134,7 @@ pull-request:
 - 은유 공식: `\bis the\b .* \bof\b`
 - 금지 단어: 위 lexical 목록 (대소문자 무시)
 - 한국어 AI스러움: `되어진`(이중피동), `결론적으로|시사하는 바|주목할 만`(AI 관용구), `수 있을 것으로|것으로 보인다`(중첩 hedging)
+- 행동 압축어: `fail-fast|fail-loud|fail-safe`, `이연`, `현행화`, `스모크 테스트`. 그 용어가 가리키는 행동으로 풀어 쓴다. 코드 식별자와 작성자 용어 인용은 예외.
 
 **실행 의무**: 파일이나 툴로 나가는 산문(PR 본문, Linear 이슈, 커밋 메시지, 문서 파일)은 아래를 실제로 실행하고, 걸린 문장을 재작성한 뒤 제출한다. 실행하지 않은 체크는 하지 않은 체크다. 채팅 답변은 mental check로 충분하다.
 
@@ -138,6 +143,7 @@ grep -nE '—|[·ㆍ]|되어진' <draft>
 grep -nE '단순히 .*아니라|에 그치지 않|not (just|only|merely).*but' <draft>
 grep -inE 'delve|leverage|intricate|pivotal|crucial|foster|harness|unlock|showcase|myriad|seamless|robust|comprehensive|elegant' <draft>
 grep -nE '결론적으로|시사하는 바|주목할 만|수 있을 것으로|것으로 보인다' <draft>
+grep -inE 'fail-(fast|loud|safe)|이연|현행화|스모크 테스트' <draft>
 ```
 
 ## Red flags: stop and rewrite
