@@ -21,3 +21,15 @@ close_tab = "prefix+ampersand"
 # the opposite way for you.
 split_horizontal = "prefix+minus"        # top/bottom  (tmux: split-window -v)
 split_vertical = "prefix+shift+minus"    # left/right  (tmux: split-window -h)
+
+[ui.toast]
+delivery = "herdr"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[experimental]
+pane_history = true
+reveal_hidden_cursor_for_cjk_ime = true
+cjk_ime_agents = ["claude", "codex"]
+switch_ascii_input_source_in_prefix = true
