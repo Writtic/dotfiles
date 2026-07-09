@@ -12,6 +12,13 @@
 prefix = "ctrl+space"          # tmux: set -g prefix C-Space
 detach = "prefix+d"            # tmux: prefix d
 
+# workspace = tmux session. ctrl+n/ctrl+p switch sessions directly (herdr leaves
+# next_workspace/previous_workspace unset by default). The navigate-mode arrow
+# keys (navigate_workspace_up/down) stay on herdr's defaults, so arrows keep
+# working too.
+next_workspace = "ctrl+n"        # forward, like emacs C-n
+previous_workspace = "ctrl+p"    # back, like emacs C-p
+
 # tab = tmux window; stock tmux uses prefix , (rename) and prefix & (kill)
 rename_tab = "prefix+comma"
 close_tab = "prefix+ampersand"
