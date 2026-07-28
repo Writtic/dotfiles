@@ -41,7 +41,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 
 ## 공통 코어: hard bans, structural (top priority)
 
-- **대조 부정문**: "not just/only/merely X, but Y", "단순히 X가 아니라 Y", "X에 그치지 않고". `단순히 조회 최적화가 아니라 구조 개선이에요` → `조회 구조를 바꿔요`.
+- **대조 부정문**: "not just/only/merely X, but Y", "단순히 X가 아니라 Y", "X에 그치지 않고". `단순히 조회 최적화가 아니라 구조 개선이에요` → `조회 구조를 바꿔요`. 변형인 `A라기보다 B`, `A인가 B인가` 대구 연쇄도 같은 계열이다(korean.md 14번).
 - **은유 공식**: "X는 Y의 Z다", "X is the Y of Z". `Redis는 이 시스템의 심장이다` → `모든 잡 상태가 Redis를 거친다`.
 - **격언형 마무리**: 끝에 얹는 의미심장한 한 줄. 끝의 `좋은 도구는 보이지 않는 법이다` → 삭제.
 - **연속 단문 드라마**: `빠르다. 단순하다. 안전하다.` → `빠르고 단순하며, 실패하면 재시도한다`.
@@ -51,7 +51,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 
 ## 공통 코어: hard bans, lexical
 
-- **자기과시 형용사**: clean, elegant, powerful, robust, seamless, comprehensive, 강력한, 우아한.
+- **자기과시 형용사**: clean, elegant, powerful, robust, seamless, comprehensive, 강력한, 우아한, 혁신적, 획기적, 압도적, 파격적, 전례 없는.
 - **smell 단어**: delve, tapestry, realm, landscape, leverage, intricate, pivotal, crucial, underscore, foster, harness, unlock, showcase, myriad.
 - **군더더기 전환어**: Moreover, Furthermore, Notably, "It's worth noting", "It's important to note".
 - **마케팅 톤**: do not promote the change. State what it does.
@@ -63,6 +63,7 @@ The fix for one must not push you into the other. Terse does not mean cryptic.
 Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 서비스에서는 양옆이 붙은 `:단어:`가 이모지로 바뀔 수 있다.
 
 - 콜론을 남발하지 않는다. 문장 부호로 꼭 필요할 때만 쓴다.
+- 목록 도입 문장 끝의 콜론은 마침표로 바꾼다(`다음과 같습니다:` → `다음과 같습니다.`). `라벨: 본문` 형태는 유지한다.
 - 쓸 때는 콜론 뒤에 공백을 둔다 (`라벨: 본문`). shortcode는 내부에 공백을 담지 못하므로, 공백이 있으면 이모지로 해석되지 않는다.
 - 단어를 콜론으로 감싼 `:단어:` 형태를 피한다.
 
@@ -77,7 +78,7 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 
 ## 공통 코어: writing principles
 
-- diff와 변경된 파일을 근거로만 쓴다. 추측이나 일반론은 더하지 않는다 ("probably because…" 금지).
+- diff와 변경된 파일을 근거로만 쓴다. 추측이나 일반론은 더하지 않는다 ("probably because…", "한 연구에 따르면", "많은 전문가들은" 같은 무출처 인용 금지).
 - 길이 상한을 지킨다: 불릿당 한 줄, 설명은 3문장 이내.
 - "polish", "enhance", "engaging" 같은 목표어를 따르지 않는다. 목표는 정확함과 간결함이다.
 - 기존 톤을 따른다 (`git log`, 최근 PR 참고).
@@ -86,8 +87,8 @@ Slack, GitHub, Linear, Obsidian 등 `:shortcode:`를 이모지로 렌더하는 �
 
 핵심 규칙만 여기 둔다. 세부 규칙과 예시는 `references/korean.md`가 담당한다.
 
-- **종결어미**: 개요, 배경처럼 독자가 먼저 읽는 산문은 해요체("~해요"). 실행 절차, 단계 목록, 체크리스트는 "~한다"체.
-- **번역체 금지**: 직역 동사(`적중을 만들` → `적중률을 높일`), 직역 개념어(`집행 장치` → `규칙 반영 체계`), 명사 압축(`추상 규칙` → `추상적인 규칙`)을 자연스러운 구로 푼다.
+- **종결어미**: 개요, 배경처럼 독자가 먼저 읽는 산문은 해요체("~해요"). 실행 절차, 단계 목록, 체크리스트는 "~한다"체. 해요체 산문 안에서 "~죠", "~고요" 변주는 허용한다.
+- **번역체 금지**: 직역 동사(`적중을 만들` → `적중률을 높일`), 직역 개념어(`집행 장치` → `규칙 반영 체계`), 명사 압축(`추상 규칙` → `추상적인 규칙`)을 자연스러운 구로 푼다. 조사 번역투(`~에 있어서`, `~에 대해` 남발)와 영어식 피동(`~에 의해`, `가지고 있다`)도 같은 계열이다(korean.md 9~10번).
 - **담백하게**: 강조 따옴표와 비유어 대신 평문. 사실만 적는다.
 
 | 상황 | 행동 |
@@ -133,17 +134,22 @@ pull-request:
 - 대조 부정문: `not (just|only|merely)\b.*\bbut\b`, `단순히 .*아니라`, `에 그치지 않`
 - 은유 공식: `\bis the\b .* \bof\b`
 - 금지 단어: 위 lexical 목록 (대소문자 무시)
-- 한국어 AI스러움: `되어진`(이중피동), `결론적으로|시사하는 바|주목할 만`(AI 관용구), `수 있을 것으로|것으로 보인다`(중첩 hedging)
+- 한국어 AI스러움: `되어진|보여지|쓰여진`(이중피동), `결론적으로|시사하는 바|주목할 만|지금이야말로|할 시점이|인 셈이`(AI 관용구·결말 공식), `수 있을 것으로|것으로 보인다`(중첩 hedging), `에 있어서|가지고 있|에 의해|에서의|으로의|로부터의`(번역투 조사·피동)
+- 빈도 신호: `에 대해`, `를 통해`, `을 위해`, `할 수 있`, `해야 한다`는 문서에 3회 이상 반복되면 분산하거나 단언으로 바꾼다 (korean.md 9번)
+- 군더더기·일본어투: `의거하|금번|에 위치하|에 위치해|에도 불구하고|필요로 하|필요로 해|않을 수 없|했었|는가를` (korean.md 16~18번)
 - 행동 압축어: `fail-fast|fail-loud|fail-safe`, `이연`, `현행화`, `스모크 테스트`. 그 용어가 가리키는 행동으로 풀어 쓴다. 코드 식별자와 작성자 용어 인용은 예외.
 
 **실행 의무**: 파일이나 툴로 나가는 산문(PR 본문, Linear 이슈, 커밋 메시지, 문서 파일)은 아래를 실제로 실행하고, 걸린 문장을 재작성한 뒤 제출한다. 실행하지 않은 체크는 하지 않은 체크다. 채팅 답변은 mental check로 충분하다.
 
 ```bash
-grep -nE '—|[·ㆍ]|되어진' <draft>
+grep -nE '—|[·ㆍ]|되어진|보여지|쓰여진' <draft>
 grep -nE '단순히 .*아니라|에 그치지 않|not (just|only|merely).*but' <draft>
 grep -inE 'delve|leverage|intricate|pivotal|crucial|foster|harness|unlock|showcase|myriad|seamless|robust|comprehensive|elegant' <draft>
-grep -nE '결론적으로|시사하는 바|주목할 만|수 있을 것으로|것으로 보인다' <draft>
+grep -nE '결론적으로|시사하는 바|주목할 만|수 있을 것으로|것으로 보인다|지금이야말로|할 시점이|인 셈이' <draft>
+grep -nE '혁신적|획기적|압도적|파격적|전례 없|에 있어서|가지고 있|에 의해|에서의|으로의|로부터의' <draft>
 grep -inE 'fail-(fast|loud|safe)|이연|현행화|스모크 테스트' <draft>
+grep -nE '의거하|금번|에 위치하|에 위치해|에도 불구하고|필요로 하|필요로 해|않을 수 없|했었|는가를' <draft>
+grep -oE '에 대해|를 통해|을 위해|할 수 있|해야 한다' <draft> | sort | uniq -c | awk '$1 >= 3'   # 빈도 신호
 ```
 
 ## Red flags: stop and rewrite

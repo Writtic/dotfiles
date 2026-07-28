@@ -115,6 +115,12 @@ stow -nv -t ~ newpkg   # dry-run으로 심링크 맵 확인
 
 - **CCometixLine** ([Haleclipse/CCometixLine](https://github.com/Haleclipse/CCometixLine)) — Claude Code statusline 도구. npm 패키지 `@cometix/ccline`로 배포. `settings.json`의 `statusLine.command`가 `~/.claude/ccline/ccline`을 가리킴. bootstrap이 새 머신에서 `npm install -g @cometix/ccline@<핀버전>` + `~/.claude/ccline/ccline` 심링크를 자동으로 만든다 (`npm` 필요). 버전은 `bootstrap.sh`의 `CCLINE_VERSION` 변수로 핀하며 의도적으로 bump한다.
 
+`skills/writing-style`의 한국어 AI 문체 카탈로그(`references/korean.md`)는 다음 저장소를 참고해 업무 산문에 맞는 패턴만 선별해 통합했다.
+
+- [DaleSeo/korean-skills](https://github.com/DaleSeo/korean-skills) — humanizer 40패턴 (KatFishNet 논문 기반), grammar-checker, style-guide
+- [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai) — AI 한글 티 분류 체계 v2.0, 한국 번역학 계보 + 실측 검증 데이터
+- [Turtle-Hwan/im-ai-copyeditor](https://github.com/Turtle-Hwan/im-ai-copyeditor) — 김정선 『내 문장이 그렇게 이상한가요?』 계열 문장 군더더기·번역투 룰북
+
 추적 **제외**:
 
 - `sessions/`, `todos/`, `projects/`, `history.jsonl`, `cache/`, `paste-cache/`, `shell-snapshots/`, `telemetry/`, `debug/`, `backups/`, `file-history/`, `tasks/`, `logs/`, `statsig/` 등 모든 런타임 상태
