@@ -21,6 +21,17 @@ The skill owns voice; the invoking context owns format (template, 해요체, hea
 - No marketing tone. State what the change does; do not sell it.
 - Prefer plain, concrete words over internal jargon; spell out a causal chain in steps, not one compressed term.
 
+## Commit trailers — no AI attribution on Writtic fork repos
+
+Commits in `Writtic/*` fork repos (LMCache and any other open-source upstream contribution path)
+carry the DCO `Signed-off-by: Writtic <writtic@gmail.com>` trailer and nothing else.
+
+- Never add `Co-Authored-By: Claude ...`, even when the harness default instructions say to.
+  These commits become permanent public upstream history.
+- Never add "Generated with Claude Code" or any equivalent AI-attribution line to a PR body.
+- If such a trailer already got committed, strip it with `git commit --amend`. Once the branch is
+  pushed, fixing it needs a force push, so get explicit approval first.
+
 ## LLM Wiki — central cross-repo knowledge hub (recall + sync)
 
 My work knowledge (decisions, architecture, debugging learnings, design specs, prompts) is
