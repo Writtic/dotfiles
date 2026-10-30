@@ -33,9 +33,11 @@ SUMMARY=$(echo "$INPUT" | jq -r '.last_assistant_message // empty' 2>/dev/null |
 [ -n "$SUMMARY" ] && SUMMARY=$(echo "$SUMMARY" | tr '\n' ' ' | cut -c1-300)
 
 DIR_NAME=$(basename "$CWD")
-TEXT=":robot_face: *Claude Code — ${EVENT}*"$'\n'":file_folder: \`${DIR_NAME}\` (${CWD})"
+# Summary goes first so the alert preview shows what the work was about
+TEXT=":robot_face: ${SUMMARY:-Claude Code — ${EVENT}}"
+[ -n "$SUMMARY" ] && TEXT="${TEXT}"$'\n'"*Claude Code — ${EVENT}*"
+TEXT="${TEXT}"$'\n'":file_folder: \`${DIR_NAME}\` (${CWD})"
 [ -n "$BRANCH" ] && TEXT="${TEXT}"$'\n'":herb: \`${BRANCH}\`"
-[ -n "$SUMMARY" ] && TEXT="${TEXT}"$'\n'":speech_balloon: ${SUMMARY}"
 
 curl -sS -X POST https://slack.com/api/chat.postMessage \
   -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
