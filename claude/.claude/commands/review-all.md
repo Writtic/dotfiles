@@ -26,11 +26,16 @@ Resolve the scope once up front so all three passes look at the same diff.
 ## Passes
 Run all three against the resolved scope. Codex runs in the background while you do the other two.
 
-1. **Codex (`/codex:review`)**: launch it first via SlashCommand so it works while you review.
-   - Default: `/codex:review --background`. If the user passed `--wait`, forward `--wait` so Codex runs in the foreground instead.
-   - Forward `--base` and `--scope` through unchanged.
-   - Codex reviews the local git state, so the changes you want reviewed must be the current working tree or checked-out HEAD.
-   - Do not fetch its output yet. Collect it in the merge step.
+1. **Codex adversarial review on `gpt-6-astra`**: launch it first so it works while you review.
+   - Use `adversarial-review`, not the built-in `review`. The built-in reviewer on astra returns a one-line "No actionable regressions were identified" even when the other passes find real behavior bugs. `adversarial-review` on the same model reports concrete findings.
+   - The `/codex:*` slash commands cannot be invoked by the model, so run the companion CLI from the repo root with Bash. Use `run_in_background` by default; if the user passed `--wait`, run it in the foreground instead.
+     ```bash
+     node ~/.claude/plugins/cache/openai-codex/codex/<ver>/scripts/codex-companion.mjs \
+       adversarial-review --wait --base <base> --scope <scope> --model gpt-6-astra
+     ```
+   - Forward `--base` and `--scope` through unchanged. Codex reviews the local git state, so the changes must be the current working tree or checked-out HEAD.
+   - Do not fetch its output yet. Collect it in the merge step. The output file stays empty until Codex finishes.
+   - A verdict of `approve` with no findings is a valid result. Exit code 1, `Reviewer failed to output a response`, `requires a newer version of Codex`, or `failed to load configuration` mean the pass failed. The last one comes from a stale `app-server-broker.mjs serve --cwd <path>` whose directory was deleted; kill that broker and rerun once.
 2. **claude `/review`**: invoke the built-in `/review` via SlashCommand for the correctness, security, and bug lens. Built-in `/review` is PR-oriented, so if it has no local target to work with, fall back to analyzing the scope diff yourself for correctness.
 3. **ponytail (`ponytail-review` skill)**: run it on the same diff for the over-engineering lens only (delete / stdlib / native / yagni / shrink). Keep its `net: -N lines possible.` summary.
 
@@ -39,7 +44,8 @@ When the Codex background task finishes, fold all three sources into one report.
 - Dedup findings that point at the same file and line and issue. Keep one, and tag it with every source that raised it.
 - Your own judgment governs. Drop auxiliary findings you assess as false positives and say which ones and why.
 - Tag each surviving finding with its origin: `own`, `codex`, or `ponytail`.
-- If Codex is still running when the other two passes are done, wait for it (check `/codex:status`). If Codex failed or was skipped, proceed with the remaining sources and note the gap.
+- Adversarial findings lean skeptical. Check each Codex finding against the code before keeping it.
+- If Codex is still running when the other two passes are done, wait for its completion notification. If Codex failed or was skipped, proceed with the remaining sources and note the gap.
 
 ## Output
 One report to the user. No submission, no file writes, no fixes.

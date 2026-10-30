@@ -3,9 +3,9 @@ Review the code changes in a PR and leave inline comments.
 
 ## Execution Procedure
 1. Check repository information with `gh repo view --json owner,name`
-2. Check PR information with `gh pr view --json number,headRefOid,body`
+2. Check PR information with `gh pr view --json number,headRefOid,baseRefName,body`
 3. Check changes with `gh pr diff`
-4. Launch the auxiliary reviews (see Auxiliary Reviews below): `/codex:review --background` first, then `/ponytail-review` on the PR diff
+4. Launch the auxiliary reviews (see Auxiliary Reviews below): the Codex adversarial review first, then `/ponytail-review` on the PR diff
 5. Invoke the `writing-style` skill, then analyze code changes and write review comments using the latest Opus model
 6. When the Codex background task completes, merge all findings (own + ponytail + codex) into one comment set per the merging rules
 7. Show the merged comments to the user with each comment's origin tagged, and get confirmation
@@ -14,7 +14,19 @@ Review the code changes in a PR and leave inline comments.
 ## Auxiliary Reviews
 Two extra passes run alongside your own analysis and their findings are folded into the same inline comments.
 
-- `/codex:review --background`: launch it right after `gh pr diff` so it runs while you analyze. Codex reviews the **local git state**, not the PR by number, so the PR head must be checked out locally first. Compare `git rev-parse HEAD` with the PR's `headRefOid`; if they differ, ask the user whether to run `gh pr checkout <number>` or skip the Codex pass. Never switch branches without asking.
+- **Codex adversarial review on `gpt-6-astra`**: launch it right after `gh pr diff` so it runs while you analyze.
+  - Use `adversarial-review`, not the built-in `review`. The built-in reviewer on astra returns a one-line "No actionable regressions were identified" even on PRs where the other passes find real behavior bugs. `adversarial-review` on the same model reports concrete findings with file, line, and confidence.
+  - The `/codex:*` slash commands cannot be invoked by the model, so run the companion CLI with Bash `run_in_background`. Codex reads the **local git state**, so check out the PR head in a detached worktree. Never switch the user's branch.
+    ```bash
+    git fetch origin pull/<number>/head
+    git worktree add --detach .claude/worktrees/review-<number> <headRefOid>
+    cd .claude/worktrees/review-<number> && node ~/.claude/plugins/cache/openai-codex/codex/<ver>/scripts/codex-companion.mjs \
+      adversarial-review --wait --base origin/<baseRefName> --scope branch --model gpt-6-astra "<one-line intent from the PR Motivation>"
+    ```
+  - The output file stays empty until Codex finishes (about 5 minutes). Wait for the completion notification.
+  - A verdict of `approve` with no findings is a valid result. These are failures, so report the Codex pass as failed instead of "no findings": exit code 1, `Reviewer failed to output a response`, `requires a newer version of Codex`, or `failed to load configuration`. The last one comes from a stale `app-server-broker.mjs serve --cwd <path>` whose directory was deleted; kill that broker and rerun once.
+  - Adversarial findings lean skeptical. Check each one against the code before adopting it.
+  - Remove the worktree after the review is submitted.
 - `/ponytail-review`: run it on the PR diff after launching Codex. It hunts over-engineering only (deletions, stdlib replacements, dead flexibility); treat it as a complement to your correctness-focused pass.
 
 **Merging rules:**
