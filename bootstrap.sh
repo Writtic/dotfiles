@@ -262,5 +262,30 @@ if [ ! -x "$CCLINE_LINK" ]; then
 	fi
 fi
 
+# -------- share hand-authored skills with Codex CLI --------
+# Codex reads skills from ~/.codex/skills/<name>/SKILL.md with the same
+# frontmatter Claude Code uses, so the repo copy serves both. Link straight to
+# the repo rather than through ~/.claude/skills, whose contents are themselves
+# stow symlinks.
+CODEX_SKILLS="$HOME/.codex/skills"
+SHARED_SKILLS="writing-style git-commit pull-request compound ruff-lsp ty-lsp"
+if [ -d "$HOME/.codex" ]; then
+	mkdir -p "$CODEX_SKILLS"
+	for s in $SHARED_SKILLS; do
+		src="$SCRIPT_DIR/claude/.claude/skills/$s"
+		dst="$CODEX_SKILLS/$s"
+		[ -d "$src" ] || continue
+		# Never clobber a real directory: those are Codex's own skills.
+		if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+			echo "NOTE: $dst is a real directory — skipping skill link." >&2
+			continue
+		fi
+		ln -sfn "$src" "$dst"
+	done
+	echo ":: linked shared skills into $CODEX_SKILLS"
+else
+	echo "NOTE: ~/.codex not found — skip Codex skill links." >&2
+fi
+
 echo ":: bootstrap complete."
 echo "   Next: open vim once to run :PlugInstall, tmux prefix+I to install tpm plugins."
