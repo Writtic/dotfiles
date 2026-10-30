@@ -224,7 +224,6 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 alias uvenv="source .venv/bin/activate"
 
-
 # ---------------------------------------------------------------------
 # Modular dotfiles (managed by GNU Stow from ~/repo/dotfiles)
 #   ~/.zshrc.d/*        : versioned helpers (git, docker, k8s, go, ...)
@@ -247,7 +246,6 @@ if [[ -d ~/.zshrc.local.d ]]; then
 fi
 [ -f ~/.aliases.local ] && source ~/.aliases.local
 
-
 # Task Master aliases added on 8/22/2025
 alias tm='task-master'
 alias taskmaster='task-master'
@@ -265,3 +263,5 @@ alias claude-mem='bun "/Users/johan/.claude/plugins/marketplaces/thedotmack/plug
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+. "$HOME/.cargo/env"
