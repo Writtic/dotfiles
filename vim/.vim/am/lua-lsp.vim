@@ -48,16 +48,17 @@ if ok_cmp then
   })
 end
 
--- nvim-lspconfig -----------------------------------------------------------
-local ok_lsp, lspconfig = pcall(require, 'lspconfig')
-if ok_lsp then
+-- LSP (nvim 0.11+ vim.lsp.config; nvim-lspconfig only ships lsp/*.lua configs) --
+if vim.lsp.config then
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local ok_cmp_lsp, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
   if ok_cmp_lsp then
     capabilities = cmp_lsp.default_capabilities(capabilities)
   end
+  vim.lsp.config('*', { capabilities = capabilities })
 
-  local on_attach = function(_, bufnr)
+  vim.api.nvim_create_autocmd('LspAttach', { callback = function(args)
+    local bufnr = args.buf
     local opts = { buffer = bufnr, silent = true }
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -69,16 +70,9 @@ if ok_lsp then
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
     vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end, opts)
-  end
+  end })
 
-  for _, server in ipairs({ 'lua_ls', 'gopls', 'ts_ls', 'pyright', 'rust_analyzer' }) do
-    if lspconfig[server] then
-      lspconfig[server].setup({
-        capabilities = capabilities,
-        on_attach    = on_attach,
-      })
-    end
-  end
+  vim.lsp.enable({ 'lua_ls', 'gopls', 'ts_ls', 'pyright', 'rust_analyzer' })
 
   -- Diagnostic presentation
   vim.diagnostic.config({
