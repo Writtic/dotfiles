@@ -1,6 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
-argument-hint: '[--wait|--background] [--base <ref>] [--scope working-tree|branch|auto]'
+argument-hint: '[--wait|--background] [--base <ref>] [--scope working-tree|branch]'
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), SlashCommand, Skill
 ---
@@ -17,7 +17,6 @@ Raw slash-command arguments:
 ## Scope
 - `--scope working-tree` (default): uncommitted changes (staged + unstaged + untracked). Untracked files are inlined too, so leftover local files such as notes or CSVs grow the Codex prompt; the report lists any untracked file that looks unrelated to the change.
 - `--scope branch`: `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`).
-- `--scope auto`: working-tree changes if any exist, else fall back to the branch diff.
 - If the resolved scope is empty, say so and stop. Do not fall back to another scope on your own.
 
 ## Passes

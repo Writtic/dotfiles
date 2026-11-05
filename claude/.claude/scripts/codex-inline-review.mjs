@@ -2,7 +2,7 @@
 // Codex adversarial review with the full diff inlined into the prompt.
 // The companion's adversarial-review inlines the diff only for <= 2 changed files; above that Codex
 // re-collects it with git/sed/rg, and each extra tool call costs ~8s of model reasoning.
-// Usage: codex-inline-review.mjs [--base <ref>] [--scope working-tree|branch|auto] [--model <id>] [--effort <level>] [--dry-run]
+// Usage: codex-inline-review.mjs [--base <ref>] [--scope working-tree|branch] [--model <id>] [--effort <level>] [--dry-run]
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -18,7 +18,7 @@ const opt = (name, fallback) => {
 const dryRun = args.includes("--dry-run");
 const model = opt("model", "gpt-6-astra");
 const effort = opt("effort", "high");
-let scope = opt("scope", "working-tree");
+const scope = opt("scope", "working-tree");
 
 const git = (...a) => execFileSync("git", a, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 const repoRoot = git("rev-parse", "--show-toplevel").trim();
@@ -41,8 +41,10 @@ const companionDir = (() => {
 const companion = path.join(companionDir, "scripts/codex-companion.mjs");
 
 const untracked = git("ls-files", "--others", "--exclude-standard").split("\n").filter(Boolean);
-const dirty = git("status", "--porcelain").trim() !== "";
-if (scope === "auto") scope = dirty ? "working-tree" : "branch";
+if (!["working-tree", "branch"].includes(scope)) {
+  console.error(`Unknown scope "${scope}". Use working-tree or branch.`);
+  process.exit(2);
+}
 
 let label;
 let context;
