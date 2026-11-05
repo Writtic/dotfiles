@@ -1,6 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
-argument-hint: '[--wait|--background] [--base <ref>] [--scope auto|working-tree|branch]'
+argument-hint: '[--wait|--background] [--base <ref>] [--scope branch|working-tree|auto]'
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), AskUserQuestion, SlashCommand, Skill
 ---
@@ -17,14 +17,14 @@ Raw slash-command arguments:
 - For PR inline comments, this is the wrong command. Use `/review-pr`.
 
 ## First action: launch Codex
-Before resolving the scope or reading any diff, launch the Codex pass (Passes step 1). Codex is the slowest pass and sets the total time, so every second spent before it starts adds to the wait. The script resolves `--scope auto` and the default base by the same rules as below.
+Before resolving the scope or reading any diff, launch the Codex pass (Passes step 1). Codex is the slowest pass and sets the total time, so every second spent before it starts adds to the wait. The script applies the default scope and base by the same rules as below.
 
 ## Scope
 Resolve the scope once so the other two passes look at the same diff Codex reviews.
+- `--scope branch` (default): `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`). Leftover untracked files such as local notes or CSVs stay out of the prompt.
 - `--scope working-tree`: uncommitted changes (staged + unstaged + untracked).
-- `--scope branch`: `git diff <base>...HEAD`; `--base` sets the base ref (default: the repo's main branch).
-- `--scope auto` (default): working-tree changes if any exist, else fall back to the branch diff.
-- Check `git status --short --untracked-files=all` plus `git diff --shortstat` and `git diff --shortstat --cached`. Untracked files count as reviewable work. If the resolved scope is empty, say so and stop.
+- `--scope auto`: working-tree changes if any exist, else fall back to the branch diff.
+- If the resolved scope is empty, say so and stop. On `branch` scope, if `git status --short` shows uncommitted changes, say in the report that they were not reviewed.
 
 ## Passes
 Run all three against the resolved scope. Codex runs in the background while you do the other two.
