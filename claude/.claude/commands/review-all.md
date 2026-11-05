@@ -16,8 +16,11 @@ Raw slash-command arguments:
 - All three passes read the same local git state, not a PR by number.
 - For PR inline comments, this is the wrong command. Use `/review-pr`.
 
+## First action: launch Codex
+Before resolving the scope or reading any diff, launch the Codex pass (Passes step 1). Codex is the slowest pass and sets the total time, so every second spent before it starts adds to the wait. The script resolves `--scope auto` and the default base by the same rules as below.
+
 ## Scope
-Resolve the scope once up front so all three passes look at the same diff.
+Resolve the scope once so the other two passes look at the same diff Codex reviews.
 - `--scope working-tree`: uncommitted changes (staged + unstaged + untracked).
 - `--scope branch`: `git diff <base>...HEAD`; `--base` sets the base ref (default: the repo's main branch).
 - `--scope auto` (default): working-tree changes if any exist, else fall back to the branch diff.
@@ -31,9 +34,9 @@ Run all three against the resolved scope. Codex runs in the background while you
    - Run it through `~/.claude/scripts/codex-inline-review.mjs`. It fills the companion's `adversarial-review` prompt with the full diff and runs `codex-companion.mjs task --model gpt-6-astra --effort high`. The companion's own `adversarial-review` inlines the diff only for 2 or fewer changed files, so Codex otherwise spends most of its time re-collecting the diff with git/sed/rg. Diffs over 256KB fall back to `adversarial-review` automatically.
    - The `/codex:*` slash commands cannot be invoked by the model, so run it from the repo root with Bash. Use `run_in_background` by default; if the user passed `--wait`, run it in the foreground instead.
      ```bash
-     node ~/.claude/scripts/codex-inline-review.mjs --base <base> --scope <scope>
+     node ~/.claude/scripts/codex-inline-review.mjs [--base <base>] [--scope <scope>]
      ```
-   - Forward `--base` and `--scope` through unchanged. The script reads the local git state, so the changes must be the current working tree or checked-out HEAD.
+   - Forward only the `--base` and `--scope` the user passed; leave them out otherwise so the script resolves them. Its first output line, `[inline-review] scope=<scope> base=<base>`, is the resolved scope; match the other two passes to it. `Nothing to review for scope <scope>.` means the scope is empty: say so and stop. The script reads the local git state, so the changes must be the current working tree or checked-out HEAD.
    - The output ends with one JSON object (`verdict`, `summary`, `findings` with `file`, `line_start`, `line_end`, `confidence`, `recommendation`). If the fallback ran, the output is the companion's rendered review instead.
    - Do not fetch its output yet. Collect it in the merge step. The output file stays empty until Codex finishes.
    - A verdict of `approve` with no findings is a valid result. Exit code 1, `Reviewer failed to output a response`, `requires a newer version of Codex`, or `failed to load configuration` mean the pass failed. The last one comes from a stale `app-server-broker.mjs serve --cwd <path>` whose directory was deleted; kill that broker and rerun once.
