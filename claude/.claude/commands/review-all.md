@@ -1,6 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
-argument-hint: '[--wait|--background] [--base <ref>] [--scope working-tree|branch]'
+argument-hint: '[--base <ref>] [--scope working-tree|branch]'
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), SlashCommand, Skill
 ---
@@ -25,7 +25,7 @@ Raw slash-command arguments:
    node ~/.claude/scripts/codex-inline-review.mjs [--base <base>] [--scope <scope>]
    ```
    - The script fills the companion's `adversarial-review` prompt with the full diff and runs `codex-companion.mjs task --model gpt-6-astra --effort high`. The companion's own `adversarial-review` inlines the diff only for 2 or fewer changed files, and Codex otherwise spends most of its time re-collecting it. Diffs over 256KB fall back to `adversarial-review` automatically.
-   - Run it from the repo root with Bash (`/codex:*` slash commands cannot be invoked by the model): `run_in_background` by default, foreground if the user passed `--wait`.
+   - Run it from the repo root with Bash and `run_in_background` (`/codex:*` slash commands cannot be invoked by the model), then do the other two passes while it works.
    - Forward only the `--base` and `--scope` the user passed. The first output line, `[inline-review] scope=<scope> base=<base>`, is the resolved scope; run the other two passes on that same diff. `Nothing to review for scope <scope>.` means stop.
    - Read the output only after Codex finishes. It ends with one JSON object (`verdict`, `summary`, `findings` with `file`, `line_start`, `line_end`, `confidence`, `recommendation`); after a fallback it is the companion's rendered review instead.
    - `approve` with no findings is a valid result. Exit code 1, `Reviewer failed to output a response`, `requires a newer version of Codex`, or `failed to load configuration` mean the pass failed. The last one comes from a stale `app-server-broker.mjs serve --cwd <path>` whose directory was deleted; kill that broker and rerun once.
