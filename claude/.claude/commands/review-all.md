@@ -27,13 +27,14 @@ Resolve the scope once up front so all three passes look at the same diff.
 Run all three against the resolved scope. Codex runs in the background while you do the other two.
 
 1. **Codex adversarial review on `gpt-6-astra`**: launch it first so it works while you review.
-   - Use `adversarial-review`, not the built-in `review`. The built-in reviewer on astra returns a one-line "No actionable regressions were identified" even when the other passes find real behavior bugs. `adversarial-review` on the same model reports concrete findings.
-   - The `/codex:*` slash commands cannot be invoked by the model, so run the companion CLI from the repo root with Bash. Use `run_in_background` by default; if the user passed `--wait`, run it in the foreground instead.
+   - Use the adversarial prompt, not the built-in `review`. The built-in reviewer on astra returns a one-line "No actionable regressions were identified" even when the other passes find real behavior bugs.
+   - Run it through `~/.claude/scripts/codex-inline-review.mjs`. It fills the companion's `adversarial-review` prompt with the full diff and runs `codex-companion.mjs task --model gpt-6-astra --effort high`. The companion's own `adversarial-review` inlines the diff only for 2 or fewer changed files, so Codex otherwise spends most of its time re-collecting the diff with git/sed/rg. Diffs over 256KB fall back to `adversarial-review` automatically.
+   - The `/codex:*` slash commands cannot be invoked by the model, so run it from the repo root with Bash. Use `run_in_background` by default; if the user passed `--wait`, run it in the foreground instead.
      ```bash
-     node ~/.claude/plugins/cache/openai-codex/codex/<ver>/scripts/codex-companion.mjs \
-       adversarial-review --wait --base <base> --scope <scope> --model gpt-6-astra
+     node ~/.claude/scripts/codex-inline-review.mjs --base <base> --scope <scope>
      ```
-   - Forward `--base` and `--scope` through unchanged. Codex reviews the local git state, so the changes must be the current working tree or checked-out HEAD.
+   - Forward `--base` and `--scope` through unchanged. The script reads the local git state, so the changes must be the current working tree or checked-out HEAD.
+   - The output ends with one JSON object (`verdict`, `summary`, `findings` with `file`, `line_start`, `line_end`, `confidence`, `recommendation`). If the fallback ran, the output is the companion's rendered review instead.
    - Do not fetch its output yet. Collect it in the merge step. The output file stays empty until Codex finishes.
    - A verdict of `approve` with no findings is a valid result. Exit code 1, `Reviewer failed to output a response`, `requires a newer version of Codex`, or `failed to load configuration` mean the pass failed. The last one comes from a stale `app-server-broker.mjs serve --cwd <path>` whose directory was deleted; kill that broker and rerun once.
 2. **claude `/review`**: invoke the built-in `/review` via SlashCommand for the correctness, security, and bug lens. Built-in `/review` is PR-oriented, so if it has no local target to work with, fall back to analyzing the scope diff yourself for correctness.
