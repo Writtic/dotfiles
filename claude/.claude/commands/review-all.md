@@ -1,7 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
 argument-hint: '[--base <ref>] [--scope working-tree|branch]'
-disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), SlashCommand, Skill
 ---
 
