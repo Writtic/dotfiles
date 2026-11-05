@@ -1,6 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
-argument-hint: '[--wait|--background] [--base <ref>] [--scope branch|working-tree|auto]'
+argument-hint: '[--wait|--background] [--base <ref>] [--scope working-tree|branch|auto]'
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), AskUserQuestion, SlashCommand, Skill
 ---
@@ -21,10 +21,10 @@ Before resolving the scope or reading any diff, launch the Codex pass (Passes st
 
 ## Scope
 Resolve the scope once so the other two passes look at the same diff Codex reviews.
-- `--scope branch` (default): `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`). Leftover untracked files such as local notes or CSVs stay out of the prompt.
-- `--scope working-tree`: uncommitted changes (staged + unstaged + untracked).
+- `--scope working-tree` (default): uncommitted changes (staged + unstaged + untracked). Untracked files are inlined too, so leftover local files such as notes or CSVs grow the Codex prompt; the report lists any untracked file that looks unrelated to the change.
+- `--scope branch`: `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`).
 - `--scope auto`: working-tree changes if any exist, else fall back to the branch diff.
-- If the resolved scope is empty, say so and stop. On `branch` scope, if `git status --short` shows uncommitted changes, say in the report that they were not reviewed.
+- If the resolved scope is empty, say so and stop. Do not fall back to another scope on your own.
 
 ## Passes
 Run all three against the resolved scope. Codex runs in the background while you do the other two.
