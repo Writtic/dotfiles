@@ -54,6 +54,8 @@ If you can't read it, this is the minimum to write a valid page without it (reco
 ### RECALL — before non-trivial work, decisions, plans, or solution design
 Use the `llmwiki-researcher` agent to surface relevant prior knowledge from the wiki.
 If surfaced content conflicts with current code/docs, don't follow it blindly: flag the conflict and judge staleness by date.
+**Recall miss**: if you later find a wiki page that existed and was relevant but the researcher did not surface, append
+`## [YYYY-MM-DD] query | recall-miss: [[<page>]]` to `log.md` with one line on the query. This count is the main trigger for revisiting wiki search (decision `2026-06-18-qmd-adoption-trigger`).
 
 ### SYNC — knowledge lands directly in the wiki
 - `/compound` writes the detail to `LLMWiki/docs/` and a synthesis to `LLMWiki/learnings/` directly.
