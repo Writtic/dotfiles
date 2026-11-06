@@ -96,7 +96,7 @@ prompt.
 ## Dotori originals (Turn 3, optional)
 
 Hubs carry a `## 도토리 문서` section: one line per internal Dotori document
-(`https://dotori.karrot.work/artifacts/<slug>`) with a Notion summary. The wiki holds only
+(a link ending in `/artifacts/<slug>`) with a Notion summary. The wiki holds only
 that summary; the evidence (tables, numbers, reasoning) lives in the Dotori body.
 
 - **Open a Dotori body** only when the caller's question needs detail the summary line does

@@ -10,7 +10,7 @@ feat: changes title example
 
 ### PR Descriptions
 ```markdown
-* Issue: https://linear.app/daangn/issue/MLI-XXX
+* Issue: https://linear.app/<workspace>/issue/<KEY>-XXX
 * Related Links:
     - [Content]
 * Motivation:
@@ -18,7 +18,7 @@ feat: changes title example
 * Changes:
     - [Content]
 ```
-- Issue: Fill in XXX by referencing the branch name
+- Issue: Take the Linear workspace and team key from the repo's PR template or recent PRs, and fill in XXX by referencing the branch name
 - Related Links: Leave links related to the tech spec or changes
 - Issue/Related Links: use `n/a` only when it is **confirmed** there is none. If not confirmed from the branch name or conversation, ask the user before creating the PR instead of guessing `n/a`
 - Motivation: Describe the reason for writing this PR in two lines or less

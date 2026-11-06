@@ -60,8 +60,7 @@
     "pyright-lsp@claude-plugins-official": true,
     "watch@claude-video": true,
     "typescript-lsp@claude-plugins-official": true,
-    "ponytail@ponytail": true,
-    "karrot-self-review@karrot-hr": true
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -83,12 +82,6 @@
         "repo": "DietrichGebert/ponytail"
       },
       "autoUpdate": true
-    },
-    "karrot-hr": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/karrot-emu/karrot-self-review.git"
-      }
     }
   },
   "language": "한국어",

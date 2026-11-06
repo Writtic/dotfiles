@@ -1,6 +1,6 @@
 ---
 description: Design a change with Codex Astra and Claude Fable in parallel, merge the two designs, ask only what you cannot decide, implement with Opus, review with /review-all, fix, commit
-argument-hint: '<task description | MLI-1234>'
+argument-hint: '<task description | ABC-1234>'
 disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git:*), Bash(node:*), Agent, SendMessage, SlashCommand, Skill, AskUserQuestion, EnterWorktree, mcp__claude_ai_Linear__get_issue
 ---
@@ -16,7 +16,7 @@ Raw slash-command arguments:
 - Models are fixed: design on `gpt-6-astra` (Codex) and `fable` (Claude), implementation on `opus` (Claude), review through `/review-all`.
 
 ## Input
-If `$ARGUMENTS` is a Linear key such as `MLI-1234`, fetch the issue and use its title and description as the task. Otherwise the arguments are the task.
+If `$ARGUMENTS` is a Linear key such as `ABC-1234`, fetch the issue and use its title and description as the task. Otherwise the arguments are the task.
 
 ## 1. Worktree
 Call EnterWorktree with the name `implement-<slug>` (slug from the Linear key or the first words of the task). Record the worktree's absolute path; every later step runs inside it so `/review-all` sees the same git state.
@@ -57,7 +57,7 @@ Invoke `/review-all` via SlashCommand with no arguments. Its default scope is th
 ## 7. Fix and commit
 - Send the surviving findings from the `/review-all` report to the Opus agent with SendMessage. It fixes them and reruns the tests.
 - Run `/review-all` once more. Whatever remains after this second pass goes into the report; do not loop again.
-- Commit with the `git-commit` skill: one commit, English message, `type: subject (MLI-XXXX)` when there is a Linear key, no `Co-Authored-By` trailer.
+- Commit with the `git-commit` skill: one commit, English message, `type: subject (ABC-XXXX)` when there is a Linear key, no `Co-Authored-By` trailer.
 
 ## 8. Report
 Design summary, each disagreement and the choice made, the spec path, the commit hash, test result, and any findings left after the second review.

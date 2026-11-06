@@ -16,8 +16,8 @@ Analyzes the current branch's changes and creates a new Linear issue.
 1. Check changes with `git diff main` or `git diff origin/main`
 2. Check recent commit messages with `git log`
 3. Compose the issue content based on changed files and commit messages
-4. Fill out Johan as the asignee
-5. Create the issue under the ml-infra team
+4. Assign the issue to me (the authenticated Linear user)
+5. Create the issue under the team whose key prefixes the issue IDs in the branch name or recent commits (e.g. `ABC-123` → team `ABC`); ask if it cannot be determined
 6. Provide the issue ID and URL
 
 **Issue structure:**
@@ -146,7 +146,7 @@ All changes committed
 
 - Run from within a Git repository
 - Linear MCP connection required
-- Access scoped to the ml-infra team
+- Access to the target Linear team
 - Must be in a state that allows comparison with the main branch
 
 ---

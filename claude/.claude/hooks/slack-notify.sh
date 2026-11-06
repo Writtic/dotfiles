@@ -1,7 +1,7 @@
 #!/bin/bash
 # Claude Code → Slack DM notification hook
 # Sends directory, git branch, and summary to Slack DM on Stop events.
-# Requires SLACK_BOT_TOKEN env var (set in ~/.zshrc.local).
+# Requires SLACK_BOT_TOKEN and SLACK_USER_ID env vars (set in ~/.zshrc.local).
 
 set -u
 
@@ -10,11 +10,9 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 INPUT=$(cat)
 
-if [ -z "${SLACK_BOT_TOKEN:-}" ]; then
+if [ -z "${SLACK_BOT_TOKEN:-}" ] || [ -z "${SLACK_USER_ID:-}" ]; then
   exit 0
 fi
-
-SLACK_USER_ID="${SLACK_USER_ID:-U03UA4WQJRH}"
 
 EVENT=$(echo "$INPUT" | jq -r '.hook_event_name // "Unknown"' 2>/dev/null || echo "Unknown")
 CWD=$(echo "$INPUT" | jq -r '.cwd // empty' 2>/dev/null || echo "")
