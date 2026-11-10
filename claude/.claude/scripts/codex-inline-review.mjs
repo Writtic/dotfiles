@@ -2,7 +2,7 @@
 // Codex adversarial review with the full diff inlined into the prompt.
 // The companion's adversarial-review inlines the diff only for <= 2 changed files; above that Codex
 // re-collects it with git/sed/rg, and each extra tool call costs ~8s of model reasoning.
-// Usage: codex-inline-review.mjs [--base <ref>] [--scope working-tree|branch] [--model <id>] [--effort <level>] [--dry-run]
+// Usage: codex-inline-review.mjs [--base <ref>] [--scope branch|working-tree] [--model <id>] [--effort <level>] [--dry-run]
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -18,7 +18,7 @@ const opt = (name, fallback) => {
 const dryRun = args.includes("--dry-run");
 const model = opt("model", "gpt-6-astra");
 const effort = opt("effort", "high");
-const scope = opt("scope", "working-tree");
+const scope = opt("scope", "branch");
 
 const git = (...a) => execFileSync("git", a, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 const repoRoot = git("rev-parse", "--show-toplevel").trim();
@@ -67,6 +67,7 @@ if (scope === "working-tree") {
 
 if (!context.includes("\n+") && !context.includes("\n-")) {
   console.log(`Nothing to review for scope ${scope}.`);
+  if (scope === "branch") console.log("Uncommitted changes are not in branch scope; rerun with --scope working-tree.");
   process.exit(0);
 }
 

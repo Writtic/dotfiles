@@ -1,6 +1,6 @@
 ---
 description: Review local git changes through three lenses (Codex + ponytail + claude /review) and return one merged report
-argument-hint: '[--base <ref>] [--scope working-tree|branch]'
+argument-hint: '[--base <ref>] [--scope branch|working-tree]'
 allowed-tools: Read, Glob, Grep, Bash(git:*), Bash(node:*), SlashCommand, Skill
 ---
 
@@ -14,8 +14,8 @@ Raw slash-command arguments:
 - All three passes read the same local git state, not a PR by number. For PR inline comments, use `/review-pr`.
 
 ## Scope
-- `--scope working-tree` (default): uncommitted changes (staged + unstaged + untracked). Untracked files are inlined too, so leftover local files such as notes or CSVs grow the Codex prompt; the report lists any untracked file that looks unrelated to the change.
-- `--scope branch`: `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`).
+- `--scope branch` (default): `git diff <base>...HEAD`; `--base` sets the base ref (default: `origin/HEAD`, else `main`). Uncommitted changes are not included; on the base branch itself the diff is empty, so use `--scope working-tree` there.
+- `--scope working-tree`: uncommitted changes (staged + unstaged + untracked). Untracked files are inlined too, so leftover local files such as notes or CSVs grow the Codex prompt; the report lists any untracked file that looks unrelated to the change.
 - If the resolved scope is empty, say so and stop. Do not fall back to another scope on your own.
 
 ## Passes
