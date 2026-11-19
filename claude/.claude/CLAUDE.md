@@ -21,6 +21,12 @@ The skill owns voice; the invoking context owns format (template, 해요체, hea
 - No marketing tone. State what the change does; do not sell it.
 - Prefer plain, concrete words over internal jargon; spell out a causal chain in steps, not one compressed term.
 
+## Result headline
+
+When a turn ends with a `result:` or `needs input:` line, write that line as one Korean sentence of at most 120 characters.
+Put the object first (PR or ticket number with its name), then the outcome. If follow-up remains, end with `남은 일: ...`.
+For `needs input:`, state the one decision needed. Do not paste an option list.
+
 ## Commit trailers — no AI attribution on Writtic fork repos
 
 Commits in `Writtic/*` fork repos (LMCache and any other open-source upstream contribution path)
