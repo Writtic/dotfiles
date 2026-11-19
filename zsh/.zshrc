@@ -265,3 +265,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 . "$HOME/.cargo/env"
+
+# Added by git-ai installer on Wed Nov 11 18:00:59 2026
+export PATH="/Users/johan/.git-ai/bin:$PATH"
