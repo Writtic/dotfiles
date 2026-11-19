@@ -11,42 +11,6 @@
     "defaultMode": "auto"
   },
   "model": "claude-fable-5[1m]",
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/slack-notify.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/wiki-recall.sh",
-            "statusMessage": "Checking for LLM Wiki recall trigger"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/wiki-sync.sh",
-            "statusMessage": "Checking for LLM Wiki sync trigger"
-          }
-        ]
-      }
-    ]
-  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/ccline/ccline",
